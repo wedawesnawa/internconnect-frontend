@@ -1,0 +1,100 @@
+<!-- <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800"> -->
+  <div class="flex flex-wrap items-center justify-between mb-4">
+      <div class="flex items-center justify-start">
+          <!-- <a href="https://flowbite.com" class="flex mr-4"> -->
+            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-black">Your Logbook</span>
+          <!-- </a> -->
+
+        </div>
+      <div class="flex items-center lg:order-2">
+          <button data-modal-target="add-user-modal" data-modal-toggle="add-user-modal"  type="button" class="hidden sm:inline-flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><svg aria-hidden="true" class="w-5 h-5 mr-1 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg> New Logbook</button>
+      </div>
+  </div>
+<!-- </nav> -->
+
+
+<div class="grid grid-cols-5 gap-4 mb-4">
+  <div href="/logbook/1">
+    <div class="h-32 rounded bg-gray-50 dark:bg-gray-800">
+        <div class="flex justify-end px-4 pt-4">
+            <button id="dropdownButton" data-dropdown-toggle="dropdown" class="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100  focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5" type="button">
+                <span class="sr-only">Open dropdown</span>
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                    <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
+                </svg>
+            </button>
+            <!-- Dropdown menu -->
+            <div id="dropdown" class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                <ul class="py-2" aria-labelledby="dropdownButton">
+                    <li>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Edit</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Export Data</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="mt-3">
+      <div class="flex justify-between mb-2">
+        <small class="text-gray-500 dark:text-gray-400">01/11/2024</small>
+        <small class="text-gray-500 dark:text-gray-400">05/11/2024</small>
+      </div>
+        <!-- Judul Logbook -->
+        <h5 class="text-base font-semibold tracking-tight text-gray-900">Logbook Project - Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport</h5>
+        <!-- Tanggal Mulai dan Selesai -->
+
+    </div>
+  </div>
+
+
+</div>
+<div class="fixed inset-0 left-0 right-0 z-50 items-center justify-center hidden overflow-x-hidden overflow-y-auto top-4 md:inset-0 h-modal sm:h-full" id="add-user-modal">
+  <div class="relative w-full h-full max-w-2xl px-4 md:h-auto">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow dark:bg-white">
+          <!-- Modal header -->
+          <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-300">
+              <h3 class="text-xl font-semibold dark:text-black">
+                  Add Logbook
+              </h3>
+              <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-700 dark:hover:text-white" data-modal-toggle="add-user-modal">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                  </svg>
+              </button>
+          </div>
+          <!-- Modal body -->
+          <div class="p-6 space-y-6">
+              <div class="grid grid-cols-6 gap-6">
+                  <div class="col-span-6">
+                      <label for="first-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Title Logbook</label>
+                      <input type="text" name="first-name" id="first-name" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-200 dark:border-gray-300 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Bonnie" required>
+                  </div>
+
+                  <div class="col-span-6 sm:col-span-3">
+                      <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Date Start</label>
+                      <input type="email" name="email" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-200 dark:border-gray-300 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="example@company.com" required>
+                  </div>
+                  <div class="col-span-6 sm:col-span-3">
+                      <label for="position" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Date End</label>
+                      <input type="text" name="position" id="position" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-200 dark:border-gray-300 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="e.g. React developer" required>
+                  </div>
+                  <div class="col-span-6">
+                      <label for="biography" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Desciption</label>
+                      <textarea id="biography" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-200 dark:border-gray-300 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="👨‍💻Full-stack web developer. Open-source contributor."></textarea>
+                  </div>
+              </div>
+          </div>
+          <!-- Modal footer -->
+          <div class="items-center p-6 border-t border-gray-200 rounded-b dark:border-gray-300">
+              <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="submit">Add Logbook</button>
+          </div>
+      </div>
+  </div>
+</div>
+

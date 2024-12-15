@@ -1,0 +1,82 @@
+<div class="grid grid-cols-1 xl:grid-cols-3 xl:gap-4">
+  <!-- Right Content -->
+  <div class="col-span-full xl:col-auto">
+      <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+        <h3 class="mb-4 text-xl font-semibold dark:text-white">General information</h3>
+        <form action="#" class="space-y-6">
+          <div class="col-span-6 mb-3 sm:col-span-3">
+            <span class="block text-sm font-medium text-gray-900 dark:text-gray-400">Nama</span>
+            <h4 class="text-base font-semibold text-gray-900 dark:text-white">John Doe</h4>
+          </div>
+          <div class="col-span-6 mb-3 sm:col-span-3">
+            <span class="block text-sm font-medium text-gray-900 dark:text-gray-400">NIM</span>
+            <h4 class="text-base font-semibold text-gray-900 dark:text-white">12345678</h4>
+          </div>
+          <div class="col-span-6 mb-3 sm:col-span-3">
+            <span class="block text-sm font-medium text-gray-900 dark:text-gray-400">Nama Pembimbing Lapangan</span>
+            <h4 class="text-base font-semibold text-gray-900 dark:text-white">Dr. Smith</h4>
+          </div>
+          <div class="col-span-6 mb-3 sm:col-span-3">
+            <span class="block text-sm font-medium text-gray-900 dark:text-gray-400">Nama Institusi</span>
+            <h4 class="text-base font-semibold text-gray-900 dark:text-white">ABC Corporation</h4>
+          </div>
+          <div class="col-span-6 mb-3 sm:col-span-3">
+            <span class="block text-sm font-medium text-gray-900 dark:text-gray-400">Semester</span>
+            <h4 class="text-base font-semibold text-gray-900 dark:text-white">6</h4>
+          </div>
+        </form>
+      </div>
+      <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+          <h3 class="mb-4 text-xl font-semibold dark:text-white">Progress</h3>
+          <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+            <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style="width: 45%"> 45%</div>
+          </div>
+      </div>
+  </div>
+  <div class="col-span-2">
+    <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+      <h3 class="mb-4 text-xl font-semibold dark:text-white">Logbook</h3>
+      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" class="p-4">
+                <div class="flex items-center">
+                  <input id="checkbox-all-logbook" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                  <label for="checkbox-all-logbook" class="sr-only">checkbox</label>
+                </div>
+              </th>
+              <th scope="col" class="px-6 py-3">Kode LB</th>
+              <th scope="col" class="px-6 py-3">Aktivitas</th>
+              <th scope="col" class="px-6 py-3">Tanggal</th>
+              <th scope="col" class="px-6 py-3">Keterangan</th>
+              <th scope="col" class="px-6 py-3">Status</th>
+              <th scope="col" class="px-6 py-3">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <td class="w-4 p-4">
+                <div class="flex items-center">
+                  <input id="checkbox-log-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                  <label for="checkbox-log-1" class="sr-only">checkbox</label>
+                </div>
+              </td>
+              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">LB001</th>
+              <td class="px-6 py-4">Observasi lapangan</td>
+              <td class="px-6 py-4">12-09-2024</td>
+              <td class="px-6 py-4">Meninjau area proyek</td>
+              <td class="px-6 py-4">Selesai</td>
+              <td class="flex items-center px-6 py-4">
+                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">File</a>
+                <a href="#" class="font-medium text-green-600 dark:text-green-500 hover:underline ms-3">Accept</a>
+              </td>
+            </tr>
+            <!-- Repeat rows as necessary -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+

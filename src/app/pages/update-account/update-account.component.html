@@ -1,0 +1,56 @@
+<section class="min-h-screen dark:bg-gray-900">
+  <div class="max-w-screen-xl px-4 py-8 mx-auto space-y-8 lg:py-16">
+    <h4 class="text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-4xl dark:text-white">Choose Your Role to Continue</h4>
+
+    <div id="dropdown-cta" class="p-4 mt-6 rounded-lg bg-blue-50 dark:bg-blue-900" role="alert">
+      <p class="mb-3 text-sm text-blue-800 dark:text-blue-400">
+        Please select the role you would like to change to. By changing your role, you agree to comply with the associated permissions and responsibilities.
+      </p>
+    </div>
+
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white">How much do you expect to use each month?</h3>
+    <ul class="grid w-full gap-6 md:grid-cols-2">
+      <li>
+          <input type="radio" id="hosting-small" name="hosting" value="hosting-small" class="hidden peer" required />
+          <label for="hosting-small" class="inline-flex items-center justify-center w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+              <div class="flex flex-col items-center justify-center text-center">
+                  <img class="w-24 h-24 rounded-full" src="/assets/images/userpkl.png" alt="image description">
+                  <div class="w-full mt-3 text-lg font-semibold">Mentor PKL</div>
+              </div>
+          </label>
+      </li>
+      <li>
+          <input type="radio" id="hosting-big" name="hosting" value="hosting-big" class="hidden peer">
+          <label for="hosting-big" class="inline-flex items-center justify-center w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+              <div class="flex flex-col items-center justify-center text-center">
+                  <img class="w-24 h-24 rounded-full" src="/assets/images/userdosen.png" alt="image description">
+                  <div class="w-full mt-3 text-lg font-semibold">Dosen Pembimbing</div>
+              </div>
+          </label>
+      </li>
+    </ul>
+
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Company</h3>
+    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="your company..." required />
+
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Upload File</h3>
+    <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file">
+
+
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white">To proceed, please confirm your eligibility to access the chosen role and agree to the terms of role change. Misrepresentation may result in access revocation.</h3>
+    <div class="flex space-x-4">
+      <div class="flex items-center">
+          <input id="inline-radio" type="radio" value="" name="inline-radio-group" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+          <label for="inline-radio" class="text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">Yes, I agree</label>
+      </div>
+      <div class="flex items-center">
+          <input id="inline-2-radio" type="radio" value="" name="inline-radio-group" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+          <label for="inline-2-radio" class="text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">No, I do not agree</label>
+      </div>
+    </div>
+
+    <div class="flex justify-center mt-8">
+      <button type="button" class="w-1/4 px-5 py-3 text-base font-medium text-center text-white rounded-lg bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">Submit</button>
+    </div>
+  </div>
+</section>

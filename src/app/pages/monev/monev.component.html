@@ -1,0 +1,144 @@
+<div class="grid gap-8 lg:grid-cols-[1.5fr,2fr] max-h-screen">
+  <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md h-fit dark:bg-gray-800 dark:border-gray-700">
+    <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"><a href="#">Monitoring and Evaluation (Monev) Application</a></h2>
+    <p class="mb-5 font-light text-gray-500 dark:text-gray-400">Submitting a monitoring and evaluation (monev) application is an essential step for students in the internship process. This process ensures that progress and compliance with set objectives are systematically tracked. By completing a monev submission, students and mentors can collaboratively review the project milestones and make adjustments to meet the desired outcomes.</p>
+    <form>
+      <div class="grid gap-6 mb-6 md:grid-cols-2">
+        <div>
+          <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date</label>
+          <div class="relative max-w-full">
+            <div class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                </svg>
+            </div>
+            <input id="datepicker-format" datepicker datepicker-min-date="06/04/2024" datepicker-max-date="05/05/2025" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date">
+          </div>
+        </div>
+        <div>
+          <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Time</label>
+          <div class="flex items-center">
+            <!-- Input Time -->
+            <input type="time" id="time"
+              class="flex-shrink-0 w-[100px] rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none
+              focus:ring-blue-500 focus:border-blue-500 block text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600
+              dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              min="09:00" max="18:00" value="00:00" required>
+
+            <!-- Select Timezone -->
+            <select id="timezones" name="timezone"
+            class="flex-grow w-[calc(100%_-_120px)] bg-gray-50 border border-gray-300 text-gray-900 text-sm
+            rounded-e-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600
+            dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+              <option value="America/New_York" selected>EST - GMT-5 (New York)</option>
+              <option value="America/Los_Angeles">PST - GMT-8 (Los Angeles)</option>
+              <option value="Europe/London">GMT - GMT+0 (London)</option>
+              <option value="Europe/Paris">CET - GMT+1 (Paris)</option>
+              <option value="Asia/Tokyo">JST - GMT+9 (Tokyo)</option>
+              <option value="Australia/Sydney">AEDT - GMT+11 (Sydney)</option>
+              <option value="Canada/Mountain">MST - GMT-7 (Canada)</option>
+              <option value="Canada/Central">CST - GMT-6 (Canada)</option>
+              <option value="Canada/Eastern">EST - GMT-5 (Canada)</option>
+              <option value="Europe/Berlin">CET - GMT+1 (Berlin)</option>
+              <option value="Asia/Dubai">GST - GMT+4 (Dubai)</option>
+              <option value="Asia/Singapore">SGT - GMT+8 (Singapore)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="mb-6">
+        <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logbook</label>
+        <select id="default" class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+          <option selected>Choose a logbook</option>
+          <option value="US">United States</option>
+          <option value="CA">Canada</option>
+          <option value="FR">France</option>
+          <option value="DE">Germany</option>
+        </select>
+      </div>
+      <div class="flex justify-end">
+        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+      </div>
+    </form>
+  </div>
+  <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md h-fit dark:bg-gray-800 dark:border-gray-700">
+    <h4 class="mb-6 text-xl font-bold tracking-tight text-gray-900 dark:text-white"><a href="#">History Monev</a></h4>
+    <table class="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="p-4">
+                    <div class="flex items-center">
+                        <input id="checkbox-all-monev" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="checkbox-all-monev" class="sr-only">checkbox</label>
+                    </div>
+                </th>
+                <th scope="col" class="px-6 py-3">Date & Time</th>
+                <th scope="col" class="px-6 py-3">Logbook</th>
+                <th scope="col" class="px-6 py-3">Status</th>
+                <th scope="col" class="px-6 py-3">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Item 1 -->
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <td class="w-4 p-4">
+                    <div class="flex items-center">
+                        <input id="checkbox-monev-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="checkbox-monev-1" class="sr-only">checkbox</label>
+                    </div>
+                </td>
+                <td class="px-6 py-4">12/10/2024, 09:30 AM</td>
+                <td class="px-6 py-4">Logbook Submission #1</td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center">
+                        <div class="h-2.5 w-2.5 rounded-full bg-yellow-500 mr-2"></div> Pending Review
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <a href="#" type="button" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                </td>
+            </tr>
+            <!-- Item 2 -->
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <td class="w-4 p-4">
+                    <div class="flex items-center">
+                        <input id="checkbox-monev-2" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="checkbox-monev-2" class="sr-only">checkbox</label>
+                    </div>
+                </td>
+                <td class="px-6 py-4">13/10/2024, 10:15 AM</td>
+                <td class="px-6 py-4">Logbook Submission #2</td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center">
+                        <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div> Approved
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <a href="#" type="button" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
+                </td>
+            </tr>
+            <!-- Item 3 -->
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <td class="w-4 p-4">
+                    <div class="flex items-center">
+                        <input id="checkbox-monev-3" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="checkbox-monev-3" class="sr-only">checkbox</label>
+                    </div>
+                </td>
+                <td class="px-6 py-4">14/10/2024, 11:45 AM</td>
+                <td class="px-6 py-4">Logbook Submission #3</td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center">
+                        <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div> Rejected
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <a href="#" type="button" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                </td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </tbody>
+    </table>
+  </div>
+
+</div>
