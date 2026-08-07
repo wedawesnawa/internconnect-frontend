@@ -1,7 +1,7 @@
 # Internconnect : Internship Management Website
 
 ## 📖 About
-InternConnect is a web application designed to digitalize the internship (Praktik Kerja Lapangan) monitoring process for undergraduate Informatics students.
+Internconnect is a web application designed to digitalize the internship (Praktik Kerja Lapangan) monitoring process for undergraduate Informatics students.
 
 Traditionally, internship activities such as daily log submissions, progress monitoring, approval requests, and communication between students, academic supervisors, and industry mentors were managed manually. InternConnect centralizes these processes into a single platform, making internship management more efficient, transparent, and collaborative.
 
