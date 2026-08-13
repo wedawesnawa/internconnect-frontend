@@ -1,39 +1,39 @@
 # Internconnect : Internship Management Website
 
-## 📖 About
+## About
 Internconnect is a web application designed to digitalize the internship (Praktik Kerja Lapangan) monitoring process for undergraduate Informatics students.
 
 Traditionally, internship activities such as daily log submissions, progress monitoring, approval requests, and communication between students, academic supervisors, and industry mentors were managed manually. InternConnect centralizes these processes into a single platform, making internship management more efficient, transparent, and collaborative.
 
 To support remote evaluations and discussions, the system integrates the Whereby Open API, allowing supervisors and students to create online meeting rooms directly from the application.
 
-## ✨ Features
-👨‍🎓 Student
+## Features
+Student
 * Submit daily internship activity logs
 * Request approvals from supervisors
 * View internship progress
 * Schedule and join online meetings
 * Manage internship profile
 
-👨‍🏫 Academic Supervisor
+Academic Supervisor
 * Monitor multiple students simultaneously
 * Review activity logs
 * Approve or reject submissions
 * Schedule evaluation meetings
 * Track student progress
 
-🏢 Industry Mentor
+Industry Mentor
 * Verify internship activities
 * Approve student reports
 * Monitor assigned interns
 * Communicate with academic supervisors
 
-🔐 Authentication
+Authentication
 * Role-based authentication
 * Role verification process
 * Secure access control
 
-## 🛠️ Tech Stack
+## Tech Stack
 | Category        | Technology           |
 | --------------- | -------------------- |
 | Frontend        | Angular              |
@@ -42,7 +42,7 @@ To support remote evaluations and discussions, the system integrates the Whereby
 | Database        | Microsoft SQL Server |
 | API Integration | Whereby Open API     |
 
-## 📷 Screenshots
+## Screenshots
 <table>
   <tr>
     <th>Image 1</th>
@@ -101,7 +101,12 @@ To support remote evaluations and discussions, the system integrates the Whereby
   </tr>
 </table>
 
-## 🎯 Challenges
+## Wireframe Design
+The application wireframe was designed using Figma
+
+[View wireframe design](https://www.figma.com/design/US463LePI2srCstqkU6vyq/Internconnect-wireframe?t=pgyQCqzZM0rdwQ2z-0)
+
+## Challenges
 Developing InternConnect required addressing several challenges:
 
 * Transforming manual internship monitoring into a fully digital workflow.
@@ -111,10 +116,10 @@ Developing InternConnect required addressing several challenges:
 * Integrating the Whereby Open API to support virtual meetings without leaving the application.
 * Ensuring that one supervisor could efficiently monitor multiple interns simultaneously.
 
-## 💡 Solutions
+## Solutions
 To overcome these challenges, InternConnect adopts a role-based architecture that separates responsibilities for each stakeholder while maintaining seamless collaboration. Approval workflows are handled digitally to reduce paperwork, and the integration with the Whereby API enables online evaluations and discussions directly from the platform, improving communication throughout the internship process.
 
-## 📚 What I Learned
+## What I Learned
 Through this project, I gained practical experience in:
 
 * Angular application development
@@ -129,7 +134,7 @@ Through this project, I gained practical experience in:
 * Enterprise web application architecture
 * Team collaboration in software development
 
-## 🔮 Future Improvements
+## Future Improvements
 * Push and email notifications
 * Real-time chat between stakeholders
 * Calendar synchronization
@@ -140,7 +145,10 @@ Through this project, I gained practical experience in:
 * Multi-university support
 * AI-assisted internship progress analysis
 
-## 📄 Publication
+## Project Documentation
+Additional project documentation:[**Backend:**](https://github.com/wedawesnawa/internconnect-backend)
+
+## Publication
 This project has been published in the Jurnal JUPITA (Universitas Udayana).
 
 ### Publication: 
