@@ -146,7 +146,7 @@ Through this project, I gained practical experience in:
 * AI-assisted internship progress analysis
 
 ## Project Documentation
-Additional project documentation:[**Backend:**](https://github.com/wedawesnawa/internconnect-backend)
+Additional project documentation: [**Backend**](https://github.com/wedawesnawa/internconnect-backend)
 
 ## Publication
 This project has been published in the Jurnal JUPITA (Universitas Udayana).
