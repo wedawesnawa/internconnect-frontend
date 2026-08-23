@@ -1,0 +1,98 @@
+<section class="relative min-h-screen bg-gray-50 dark:bg-gray-900">
+  <!-- Logo section -->
+  <a href="#" class="absolute flex items-center m-6 text-2xl font-semibold text-gray-900 left-4 top-4 dark:text-white">
+    <img class="mr-2 h-14 w-50" src="assets/images/logo.png" alt="logo">
+  </a>
+
+  <!-- Form section -->
+  <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+    <div class="w-full bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+      <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+        <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+          Sign in to your account
+        </h1>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-700 dark:text-red-400" role="alert">
+          {{ errorMessage }}
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4 md:space-y-6">
+          <!-- Username/Email Field -->
+          <div>
+            <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Username or Email
+            </label>
+            <input
+              type="text"
+              formControlName="username"
+              id="username"
+              placeholder="johndoe or name@company.com"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              [class.border-red-500]="f['username'].invalid && f['username'].touched"
+            >
+            <div *ngIf="f['username'].invalid && f['username'].touched" class="mt-1 text-sm text-red-600 dark:text-red-400">
+              <span *ngIf="f['username'].errors?.['required']">Username is required</span>
+            </div>
+          </div>
+
+          <!-- Password Field -->
+          <div>
+            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Password
+            </label>
+            <div class="relative">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                formControlName="password"
+                id="password"
+                placeholder="••••••••"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                [class.border-red-500]="f['password'].invalid && f['password'].touched"
+              >
+              <button
+                type="button"
+                (click)="togglePasswordVisibility()"
+                class="absolute inset-y-0 right-0 flex items-center pr-3 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              >
+                {{ showPassword ? '' : '' }}
+              </button>
+            </div>
+            <div *ngIf="f['password'].invalid && f['password'].touched" class="mt-1 text-sm text-red-600 dark:text-red-400">
+              <span *ngIf="f['password'].errors?.['required']">Password is required</span>
+              <span *ngIf="f['password'].errors?.['minlength']">Password must be at least 6 characters</span>
+            </div>
+          </div>
+
+          <!-- Forgot Password Link -->
+          <div class="flex items-center justify-end">
+            <a routerLink="/auth/forget-password" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">
+              Forgot password?
+            </a>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            [disabled]="loading || loginForm.invalid"
+            class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span *ngIf="!loading">Sign in</span>
+            <span *ngIf="loading" class="flex items-center justify-center">
+              <svg class="w-5 h-5 mr-3 -ml-1 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Processing...
+            </span>
+          </button>
+
+          <!-- Register Link -->
+          <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+            Not registered? <a routerLink="/auth/register" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Create account</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

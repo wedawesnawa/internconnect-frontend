@@ -32,7 +32,7 @@
             "scripts": [
               "node_modules/flowbite/dist/flowbite.min.js"
             ],
-            "baseHref": "/Internconnect/"
+            "baseHref": "/"
           },
           "configurations": {
             "production": {

@@ -1,0 +1,170 @@
+<section class="relative min-h-screen bg-gray-50 dark:bg-gray-900">
+  <!-- Logo positioned to the top left -->
+  <a href="#" class="absolute flex items-center m-6 text-2xl font-semibold text-gray-900 top-4 left-4 dark:text-white">
+    <img class="mr-2 w-50 h-14" src="/assets/images/logo.png" alt="logo">
+  </a>
+
+  <!-- Centered form content -->
+  <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+    <div class="w-full bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+      <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+        <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+          Create an account
+        </h1>
+
+        <!-- Success Message -->
+        <div *ngIf="successMessage" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-700 dark:text-green-400" role="alert">
+          {{ successMessage }}
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-700 dark:text-red-400" role="alert">
+          {{ errorMessage }}
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4 md:space-y-6">
+          <!-- Username Field -->
+          <div>
+            <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Username
+            </label>
+            <input
+              type="text"
+              formControlName="username"
+              id="username"
+              placeholder="example: jhon2208561021"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              [class.border-red-500]="f['username'].invalid && f['username'].touched"
+            >
+            <div *ngIf="f['username'].invalid && f['username'].touched" class="mt-1 text-sm text-red-600 dark:text-red-400">
+              <span *ngIf="f['username'].errors?.['required']">Username is required</span>
+              <span *ngIf="f['username'].errors?.['minlength']">
+                Username must be at least 3 characters.
+              </span>
+              <span *ngIf="f['username'].errors?.['pattern']">
+                Username can only contain lowercase letters and numbers.
+              </span>
+            </div>
+          </div>
+
+          <!-- Email Field -->
+          <div>
+            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Your email
+            </label>
+            <input
+              type="email"
+              formControlName="email"
+              id="email"
+              placeholder="name@company.com"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              [class.border-red-500]="f['email'].invalid && f['email'].touched"
+            >
+            <div *ngIf="f['email'].invalid && f['email'].touched" class="mt-1 text-sm text-red-600 dark:text-red-400">
+              <span *ngIf="f['email'].errors?.['required']">Email is required</span>
+              <span *ngIf="f['email'].errors?.['email']">Please enter a valid email address</span>
+            </div>
+          </div>
+
+          <!-- Password Field -->
+          <div>
+            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Password
+            </label>
+            <div class="relative">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                formControlName="password"
+                id="password"
+                placeholder="••••••••"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                [class.border-red-500]="f['password'].invalid && f['password'].touched"
+              >
+              <button
+                type="button"
+                (click)="togglePasswordVisibility()"
+                class="absolute inset-y-0 right-0 flex items-center pr-3 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              >
+                {{ showPassword ? '' : '' }}
+              </button>
+            </div>
+            <div *ngIf="f['password'].invalid && f['password'].touched" class="mt-1 text-sm text-red-600 dark:text-red-400">
+              <span *ngIf="f['password'].errors?.['required']">Password is required</span>
+              <span *ngIf="f['password'].errors?.['minlength']">Password must be at least 6 characters</span>
+            </div>
+          </div>
+
+          <!-- Confirm Password Field -->
+          <div>
+            <label for="confirm-password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Confirm password
+            </label>
+            <div class="relative">
+              <input
+                [type]="showConfirmPassword ? 'text' : 'password'"
+                formControlName="confirmPassword"
+                id="confirm-password"
+                placeholder="••••••••"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                [class.border-red-500]="f['confirmPassword'].invalid && f['confirmPassword'].touched"
+              >
+              <button
+                type="button"
+                (click)="toggleConfirmPasswordVisibility()"
+                class="absolute inset-y-0 right-0 flex items-center pr-3 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              >
+                {{ showConfirmPassword ? '' : '' }}
+              </button>
+            </div>
+            <div *ngIf="f['confirmPassword'].invalid && f['confirmPassword'].touched" class="mt-1 text-sm text-red-600 dark:text-red-400">
+              <span *ngIf="f['confirmPassword'].errors?.['required']">Please confirm your password</span>
+              <span *ngIf="registerForm.errors?.['passwordMismatch'] && f['confirmPassword'].value">Passwords do not match</span>
+            </div>
+          </div>
+
+          <!-- Terms and Conditions -->
+          <div class="flex items-start">
+            <div class="flex items-center h-5">
+              <input
+                id="terms"
+                formControlName="terms"
+                type="checkbox"
+                class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
+                [class.border-red-500]="f['terms'].invalid && f['terms'].touched"
+              >
+            </div>
+            <div class="ml-3 text-sm">
+              <label for="terms" class="font-light text-gray-500 dark:text-gray-300">
+                I accept the <a class="font-medium text-blue-600 hover:underline dark:text-blue-500" href="#">Terms and Conditions</a>
+              </label>
+              <div *ngIf="f['terms'].invalid && f['terms'].touched" class="mt-1 text-sm text-red-600 dark:text-red-400">
+                You must accept the terms and conditions
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            [disabled]="loading || registerForm.invalid"
+            class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span *ngIf="!loading">Create an account</span>
+            <span *ngIf="loading" class="flex items-center justify-center">
+              <svg class="w-5 h-5 mr-3 -ml-1 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Processing...
+            </span>
+          </button>
+
+          <!-- Login Link -->
+          <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+            Already have an account? <a routerLink="/auth/login" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Login here</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

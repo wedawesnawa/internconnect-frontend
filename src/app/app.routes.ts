@@ -1,44 +1,114 @@
 import { Routes } from '@angular/router';
-import { LandingPageComponent } from './pages/landing-page/landing-page.component'
-import { LoginComponent } from './pages/login/login.component';
-import { RegisterComponent } from './pages/register/register.component';
-import { ForgetPasswordComponent } from './pages/forget-password/forget-password.component';
-import { PageNotFoundComponent } from './shared/page-not-found/page-not-found.component';
-import { ContentComponent } from './shared/content/content.component';
-import { UpdateAccountComponent } from './pages/update-account/update-account.component';
-import { LogbookComponent } from './pages/logbook/logbook.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { MonevComponent } from './pages/monev/monev.component';
-import { ProfileComponent } from './pages/profile/profile.component';
-import { ListUserComponent } from './pages/list-user/list-user.component';
-import { DetailLogbookComponent } from './pages/detail-logbook/detail-logbook.component';
-import { DetailMonevComponent } from './pages/detail-monev/detail-monev.component';
-import { DetailUsersComponent } from './pages/detail-users/detail-users.component';
-import { SettingComponent } from './pages/setting/setting.component';
+import { AuthGuard } from './core/guards/auth.guard';
+import { GuestGuard } from './core/guards/guest.guard';
 
 export const routes: Routes = [
-  {path: "", component: LandingPageComponent},
-  {path: "login", component: LoginComponent},
-  {path: "register", component: RegisterComponent},
-  {path: "forget-password", component:ForgetPasswordComponent},
-  // {path: "page-404", component:PageNotFoundComponent},
-  {path: "update-account", component:UpdateAccountComponent},
 
-  {path: "",
-    component:ContentComponent,
+  // =========================
+  // PUBLIC ROUTES
+  // =========================
+  {
+    path: '',
+    loadComponent: () => import('./feature/landing/pages/landing-page/landing-page.component')
+      .then(m => m.LandingPageComponent),
+    pathMatch: 'full'
+  },
+
+  // =========================
+  // AUTH ROUTES (LAZY LOADING)
+  // =========================
+  {
+    path: 'auth',
+    loadChildren: () => import('./feature/auth/auth.routes').then(m => m.AUTH_ROUTES)
+  },
+
+  // =========================
+  // MAIN APPLICATION (PROTECTED)
+  // =========================
+  {
+    path: '',
+    loadComponent: () => import('./layouts/main-layout/main-layout.component')
+    .then(m => m.MainLayoutComponent),
+    canActivate: [AuthGuard],
     children: [
-      {path: "", redirectTo: 'home', pathMatch: 'full'},
-      {path: "dashboard", component:DashboardComponent},
-      {path: "logbook", component:LogbookComponent},
-      {path:"logbook/1",component:DetailLogbookComponent},
-      {path: "monev", component:MonevComponent},
-      {path:"monev/1",component:DetailMonevComponent},
-      {path: "profile", component:ProfileComponent},
-      {path: "setting", component:SettingComponent},
-      {path: "list-user", component:ListUserComponent},
-      {path:"list-user/1",component:DetailUsersComponent},
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./feature/dashboard/pages/dashboard/dashboard.component')
+          .then(m => m.DashboardComponent),
+        data: { title: 'Dashboard' }
+      },
+      {
+        path: 'logbook',
+        loadComponent: () => import('./feature/logbook/pages/logbook/logbook.component')
+          .then(m => m.LogbookComponent),
+        data: { title: 'Logbook' }
+      },
+      {
+        path: 'logbook/:id',
+        loadComponent: () => import('./feature/logbook/pages/detail-logbook/detail-logbook.component')
+          .then(m => m.DetailLogbookComponent),
+        data: { title: 'Detail Logbook' }
+      },
+      {
+        path: 'monev',
+        loadComponent: () => import('./feature/monev/pages/monev/monev.component')
+          .then(m => m.MonevComponent),
+        data: { title: 'Monev' }
+      },
+      {
+        path: 'monev/:id',
+        loadComponent: () => import('./feature/monev/pages/detail-monev/detail-monev.component')
+          .then(m => m.DetailMonevComponent),
+        data: { title: 'Detail Monev' }
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./feature/profile/pages/profile/profile.component')
+          .then(m => m.ProfileComponent),
+        data: { title: 'Profile' }
+      },
+      {
+        path: 'update-account',
+        loadComponent: () => import('./feature/profile/pages/update-account/update-account.component')
+          .then(m => m.UpdateAccountComponent),
+        data: { title: 'Update Account' }
+      },
+      {
+        path: 'setting',
+        loadComponent: () => import('./feature/settings/pages/setting/setting.component')
+          .then(m => m.SettingComponent),
+        data: { title: 'Settings' }
+      },
+      {
+        path: 'list-user',
+        loadComponent: () => import('./feature/users/pages/list-user/list-user.component')
+          .then(m => m.ListUserComponent),
+        data: { title: 'Users' }
+      },
+      {
+        path: 'list-user/:id',
+        loadComponent: () => import('./feature/users/pages/detail-users/detail-users.component')
+          .then(m => m.DetailUsersComponent),
+        data: { title: 'User Detail' }
+      },
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+      }
     ]
   },
-  { path: 'page-404', component: PageNotFoundComponent },
-  { path: '**', redirectTo: 'page-404' }
+
+  // =========================
+  // NOT FOUND
+  // =========================
+  {
+    path: '404',
+    loadComponent: () => import('./shared/pages/page-not-found/page-not-found.component')
+      .then(m => m.PageNotFoundComponent)
+  },
+  {
+    path: '**',
+    redirectTo: '404'
+  }
 ];

@@ -1,12 +1,12 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
- // FullCalendar plugin
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes), provideHttpClient(),
+    provideRouter(routes),
+    provideHttpClient(withInterceptorsFromDi())
+    // Tidak perlu interceptor lagi karena token di cookie
   ]
 };
