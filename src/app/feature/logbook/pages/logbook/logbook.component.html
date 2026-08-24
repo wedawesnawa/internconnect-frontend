@@ -1,100 +1,202 @@
-<!-- <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800"> -->
-  <div class="flex flex-wrap items-center justify-between mb-4">
-      <div class="flex items-center justify-start">
-          <!-- <a href="https://flowbite.com" class="flex mr-4"> -->
-            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-black">Your Logbook</span>
-          <!-- </a> -->
-
-        </div>
-      <div class="flex items-center lg:order-2">
-          <button data-modal-target="add-user-modal" data-modal-toggle="add-user-modal"  type="button" class="hidden sm:inline-flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><svg aria-hidden="true" class="w-5 h-5 mr-1 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg> New Logbook</button>
-      </div>
+<div class="p-6">
+  <!-- Header -->
+  <div class="flex flex-wrap items-center justify-between mb-6">
+    <div class="flex items-center justify-start">
+      <span class="text-2xl font-semibold text-gray-900">Your Logbook</span>
+    </div>
+    <div class="flex items-center">
+      <button
+        (click)="openModal()"
+        type="button"
+        class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white transition-colors bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300">
+        <svg aria-hidden="true" class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+        </svg>
+        New Logbook
+      </button>
+    </div>
   </div>
-<!-- </nav> -->
 
+  <!-- Logbook Grid -->
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div *ngFor="let logbook of logbooks">
+      <app-card
+        [hoverable]="true"
+        imageUrl="/assets/images/default-logbook.jpg"
+        imageAlt="Logbook image">
 
-<div class="grid grid-cols-5 gap-4 mb-4">
-  <div href="/logbook/1">
-    <div class="h-32 rounded bg-gray-50 dark:bg-gray-800">
-        <div class="flex justify-end px-4 pt-4">
-            <button id="dropdownButton" data-dropdown-toggle="dropdown" class="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100  focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5" type="button">
-                <span class="sr-only">Open dropdown</span>
-                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
-                    <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
-                </svg>
+        <!-- Dropdown di pojok kanan atas gambar -->
+        <div card-image-actions class="absolute z-10 top-2 right-2">
+          <div class="relative group">
+            <button class="text-white bg-black/50 hover:bg-black/70 rounded-lg text-sm p-1.5 transition-colors backdrop-blur-sm">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 16 3">
+                <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
+              </svg>
             </button>
-            <!-- Dropdown menu -->
-            <div id="dropdown" class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                <ul class="py-2" aria-labelledby="dropdownButton">
-                    <li>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Edit</a>
-                    </li>
-                    <li>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Export Data</a>
-                    </li>
-                    <li>
-                        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
-                    </li>
-                </ul>
+            <!-- Dropdown -->
+            <div class="absolute right-0 z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow group-hover:block w-44">
+              <ul class="py-1">
+                <li>
+                  <button
+                    (click)="editLogbook(logbook)"
+                    class="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100">
+                    Edit
+                  </button>
+                </li>
+                <li>
+                  <button
+                    (click)="deleteLogbook(logbook.id)"
+                    class="block w-full px-4 py-2 text-sm text-left text-red-600 hover:bg-gray-100">
+                    Delete
+                  </button>
+                </li>
+              </ul>
             </div>
+          </div>
         </div>
-    </div>
-    <div class="mt-3">
-      <div class="flex justify-between mb-2">
-        <small class="text-gray-500 dark:text-gray-400">01/11/2024</small>
-        <small class="text-gray-500 dark:text-gray-400">05/11/2024</small>
-      </div>
-        <!-- Judul Logbook -->
-        <h5 class="text-base font-semibold tracking-tight text-gray-900">Logbook Project - Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport</h5>
-        <!-- Tanggal Mulai dan Selesai -->
 
+        <!-- Card Body Content -->
+        <div class="space-y-2">
+          <!-- Judul - 1 baris dengan ellipsis -->
+          <h4 class="text-sm font-semibold text-gray-900 truncate" title="{{ logbook.title }}">
+            {{ logbook.title }}
+          </h4>
+
+          <!-- Deskripsi - 2 baris dengan ellipsis -->
+          <p class="text-sm text-gray-600 line-clamp-2">
+            {{ logbook.description }}
+          </p>
+
+          <!-- Status dan Tanggal -->
+          <div class="flex items-center justify-between pt-2">
+            <span
+              [class]="'inline-block px-2 py-0.5 text-xs font-medium rounded-full ' + getStatusColor(logbook.status)">
+              {{ logbook.status }}
+            </span>
+            <span class="text-xs text-gray-500">
+              {{ logbook.dateStart }} - {{ logbook.dateEnd }}
+            </span>
+          </div>
+
+          <!-- View Details Link -->
+          <div class="pt-2 border-t border-gray-200">
+            <a
+              [routerLink]="['/logbook', logbook.id]"
+              class="text-sm font-medium text-blue-600 hover:text-blue-800">
+              View Details →
+            </a>
+          </div>
+        </div>
+      </app-card>
     </div>
   </div>
 
-
-</div>
-<div class="fixed inset-0 left-0 right-0 z-50 items-center justify-center hidden overflow-x-hidden overflow-y-auto top-4 md:inset-0 h-modal sm:h-full" id="add-user-modal">
-  <div class="relative w-full h-full max-w-2xl px-4 md:h-auto">
-      <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow dark:bg-white">
-          <!-- Modal header -->
-          <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-300">
-              <h3 class="text-xl font-semibold dark:text-black">
-                  Add Logbook
-              </h3>
-              <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-700 dark:hover:text-white" data-modal-toggle="add-user-modal">
-                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                  </svg>
-              </button>
-          </div>
-          <!-- Modal body -->
-          <div class="p-6 space-y-6">
-              <div class="grid grid-cols-6 gap-6">
-                  <div class="col-span-6">
-                      <label for="first-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Title Logbook</label>
-                      <input type="text" name="first-name" id="first-name" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-200 dark:border-gray-300 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Bonnie" required>
-                  </div>
-
-                  <div class="col-span-6 sm:col-span-3">
-                      <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Date Start</label>
-                      <input type="email" name="email" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-200 dark:border-gray-300 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="example@company.com" required>
-                  </div>
-                  <div class="col-span-6 sm:col-span-3">
-                      <label for="position" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Date End</label>
-                      <input type="text" name="position" id="position" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-200 dark:border-gray-300 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="e.g. React developer" required>
-                  </div>
-                  <div class="col-span-6">
-                      <label for="biography" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Desciption</label>
-                      <textarea id="biography" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-200 dark:border-gray-300 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="👨‍💻Full-stack web developer. Open-source contributor."></textarea>
-                  </div>
-              </div>
-          </div>
-          <!-- Modal footer -->
-          <div class="items-center p-6 border-t border-gray-200 rounded-b dark:border-gray-300">
-              <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="submit">Add Logbook</button>
-          </div>
-      </div>
+  <!-- Empty State -->
+  <div *ngIf="logbooks.length === 0" class="py-12 text-center">
+    <p class="text-gray-500">No logbooks found. Create your first logbook!</p>
   </div>
 </div>
 
+<!-- Modal Component -->
+<app-modal
+  [isOpen]="isModalOpen"
+  [title]="isEditing ? 'Edit Logbook' : 'Add New Logbook'"
+  size="lg"
+  (close)="closeModal()">
+
+  <form [formGroup]="logbookForm" (ngSubmit)="onSubmit()">
+    <div class="space-y-4">
+      <!-- Title -->
+      <div>
+        <label for="title" class="block mb-2 text-sm font-medium text-gray-900">
+          Title Logbook <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          formControlName="title"
+          id="title"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          placeholder="Enter logbook title"
+          [class.border-red-500]="f['title'].invalid && f['title'].touched">
+        <div *ngIf="f['title'].invalid && f['title'].touched" class="mt-1 text-sm text-red-600">
+          <span *ngIf="f['title'].errors?.['required']">Title is required</span>
+          <span *ngIf="f['title'].errors?.['minlength']">Title must be at least 3 characters</span>
+        </div>
+      </div>
+
+      <!-- Date Range -->
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div>
+          <label for="dateStart" class="block mb-2 text-sm font-medium text-gray-900">
+            Date Start <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="date"
+            formControlName="dateStart"
+            id="dateStart"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            [class.border-red-500]="f['dateStart'].invalid && f['dateStart'].touched">
+          <div *ngIf="f['dateStart'].invalid && f['dateStart'].touched" class="mt-1 text-sm text-red-600">
+            Date start is required
+          </div>
+        </div>
+        <div>
+          <label for="dateEnd" class="block mb-2 text-sm font-medium text-gray-900">
+            Date End <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="date"
+            formControlName="dateEnd"
+            id="dateEnd"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            [class.border-red-500]="f['dateEnd'].invalid && f['dateEnd'].touched">
+          <div *ngIf="f['dateEnd'].invalid && f['dateEnd'].touched" class="mt-1 text-sm text-red-600">
+            Date end is required
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label for="description" class="block mb-2 text-sm font-medium text-gray-900">
+          Description <span class="text-red-500">*</span>
+        </label>
+        <textarea
+          formControlName="description"
+          id="description"
+          rows="4"
+          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Describe your logbook..."
+          [class.border-red-500]="f['description'].invalid && f['description'].touched">
+        </textarea>
+        <div *ngIf="f['description'].invalid && f['description'].touched" class="mt-1 text-sm text-red-600">
+          <span *ngIf="f['description'].errors?.['required']">Description is required</span>
+          <span *ngIf="f['description'].errors?.['minlength']">Description must be at least 10 characters</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="flex justify-end pt-4 mt-4 space-x-3 border-t border-gray-200">
+      <button
+        type="button"
+        (click)="closeModal()"
+        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-gray-200">
+        Cancel
+      </button>
+      <button
+        type="submit"
+        [disabled]="loading || logbookForm.invalid"
+        class="px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 disabled:opacity-50 disabled:cursor-not-allowed">
+        <span *ngIf="!loading">{{ isEditing ? 'Update' : 'Create' }} Logbook</span>
+        <span *ngIf="loading" class="flex items-center">
+          <svg class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Processing...
+        </span>
+      </button>
+    </div>
+  </form>
+</app-modal>

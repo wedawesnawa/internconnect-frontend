@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { initFlowbite } from 'flowbite';
 import { ThemeService } from './core/services/theme.service';
+import { AlertContainerComponent } from './shared/components/alert/alert-container.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, AlertContainerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

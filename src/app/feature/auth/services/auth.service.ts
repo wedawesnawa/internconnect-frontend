@@ -205,4 +205,63 @@ export class AuthService {
       user
     });
   }
+
+  // Update User Role
+  updateUserRole(formData: FormData): Observable<any> {
+    this.setLoading(true);
+    this.clearError();
+
+    console.log('Updating role with PUT method...');
+
+    // Log form data entries untuk debug
+    formData.forEach((value, key) => {
+      console.log(`${key}:`, value);
+    });
+
+    return this.apiService.putFormData('User/update-role', formData, { withCredentials: true }).pipe(
+      tap((response: any) => {
+        this.setLoading(false);
+        this.clearError();
+        console.log('Role updated successfully:', response);
+
+        // Update user data jika ada di response
+        if (response.user) {
+          this.saveUser(response.user);
+          this.updateAuthState(response.user, null, true);
+        }
+      }),
+      catchError((error: any) => {
+        this.setLoading(false);
+        this.setError(error);
+        console.error('Update role error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  // === GET USER DETAIL ===
+  getUserDetail(): Observable<any> {
+    return this.apiService.get('UserDetail', undefined, { withCredentials: true }).pipe(
+      tap((response: any) => {
+        console.log('User detail retrieved:', response);
+      }),
+      catchError((error: any) => {
+        console.error('Get user detail error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  // === UPDATE USER DETAIL ===
+  updateUserDetail(data: any): Observable<any> {
+    return this.apiService.put('UserDetail', data, { withCredentials: true }).pipe(
+      tap((response: any) => {
+        console.log('User detail updated:', response);
+      }),
+      catchError((error: any) => {
+        console.error('Update user detail error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
 }

@@ -54,3 +54,18 @@ export interface AuthState {
   loading: boolean;
   error: string | null;
 }
+
+// === TAMBAHKAN USER DETAIL ===
+export interface UserDetail {
+  nama: string;
+  telp: string;
+  bio: string;
+  alamat: string;
+  instansi: string;
+  alamatInstansi?: string;
+}
+
+export interface UserDetailResponse {
+  userDetail: UserDetail;
+  profileUrl: string;
+}

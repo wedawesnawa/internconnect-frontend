@@ -13,6 +13,12 @@ export const routes: Routes = [
       .then(m => m.LandingPageComponent),
     pathMatch: 'full'
   },
+  {
+    path: 'update-account',
+    loadComponent: () => import('./feature/profile/pages/update-account/update-account.component')
+      .then(m => m.UpdateAccountComponent),
+    data: { title: 'Update Account' }
+  },
 
   // =========================
   // AUTH ROUTES (LAZY LOADING)
@@ -67,12 +73,12 @@ export const routes: Routes = [
           .then(m => m.ProfileComponent),
         data: { title: 'Profile' }
       },
-      {
-        path: 'update-account',
-        loadComponent: () => import('./feature/profile/pages/update-account/update-account.component')
-          .then(m => m.UpdateAccountComponent),
-        data: { title: 'Update Account' }
-      },
+      // {
+      //   path: 'update-account',
+      //   loadComponent: () => import('./feature/profile/pages/update-account/update-account.component')
+      //     .then(m => m.UpdateAccountComponent),
+      //   data: { title: 'Update Account' }
+      // },
       {
         path: 'setting',
         loadComponent: () => import('./feature/settings/pages/setting/setting.component')

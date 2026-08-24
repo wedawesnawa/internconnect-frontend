@@ -58,4 +58,13 @@ export class ApiService {
       withCredentials: options?.withCredentials || false
     });
   }
+  putFormData<T>(endpoint: string, formData: FormData, options?: { withCredentials?: boolean }): Observable<T> {
+    const headers = new HttpHeaders();
+    return this.http.put<T>(`${this.baseUrl}/${endpoint}`, formData, {
+      headers: headers,
+      withCredentials: options?.withCredentials || false,
+      reportProgress: true
+      // Jangan set Content-Type, biarkan browser yang set dengan boundary
+    });
+  }
 }

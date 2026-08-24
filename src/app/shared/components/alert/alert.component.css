@@ -1,0 +1,73 @@
+/* Animasi slide in dari kanan */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Animasi slide out ke kanan */
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Animasi progress bar */
+@keyframes progressShrink {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+/* Apply animations */
+[role="alert"] {
+  animation: slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+[role="alert"].closing {
+  animation: slideOutRight 0.4s ease-in forwards;
+}
+
+/* Progress bar animation */
+[class*="h-full"] {
+  animation: progressShrink linear forwards;
+  animation-duration: 5s; /* Will be overridden by inline style */
+}
+
+/* Shadow and hover effects */
+[class*="shadow-lg"] {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+[class*="shadow-lg"]:hover {
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  [class*="fixed"] {
+    left: 1rem !important;
+    right: 1rem !important;
+    width: auto !important;
+  }
+
+  [class*="rounded-lg"] {
+    min-width: unset !important;
+    width: 100% !important;
+  }
+}

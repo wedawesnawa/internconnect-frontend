@@ -42,7 +42,6 @@ export class LandingPageComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
-    // Navigasi akan dihandle di service
   }
 
   goToDashboard(): void {
@@ -55,5 +54,31 @@ export class LandingPageComponent implements OnInit {
 
   goToSettings(): void {
     this.router.navigate(['/setting']);
+  }
+
+  // === METHOD BARU UNTUK GET VERIFIED ===
+  goToUpdateAccount(): void {
+    if (this.isAuthenticated) {
+      // Jika sudah login, langsung ke update-account
+      this.router.navigate(['/update-account']);
+    } else {
+      // Jika belum login, redirect ke login dengan returnUrl
+      this.router.navigate(['/auth/login'], {
+        queryParams: { returnUrl: '/update-account' }
+      });
+    }
+  }
+
+  // === METHOD UNTUK FEATURE LAINNYA ===
+  goToFeature(feature: string): void {
+    if (this.isAuthenticated) {
+      // Jika sudah login, langsung ke feature
+      this.router.navigate([`/${feature}`]);
+    } else {
+      // Jika belum login, redirect ke login dengan returnUrl
+      this.router.navigate(['/auth/login'], {
+        queryParams: { returnUrl: `/${feature}` }
+      });
+    }
   }
 }

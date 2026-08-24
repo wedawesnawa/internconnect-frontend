@@ -4,6 +4,7 @@ import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { LoginRequest } from '../../models/auth.model';
+import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,8 @@ import { LoginRequest } from '../../models/auth.model';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    AlertComponent // ← Pastikan ini ada
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
@@ -20,6 +22,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loading = false;
   errorMessage = '';
+  successMessage = '';
   showPassword = false;
   returnUrl: string = '/dashboard';
 
@@ -36,11 +39,18 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Ambil returnUrl dari query params
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
-    console.log('Login: returnUrl =', this.returnUrl);
 
-    // Cek jika sudah login
+    // Tampilkan pesan dari query params
+    const message = this.route.snapshot.queryParams['message'];
+    if (message) {
+      this.successMessage = message;
+      this.router.navigate([], {
+        queryParams: {},
+        replaceUrl: true
+      });
+    }
+
     if (this.authService.getUser()) {
       console.log('Login: User already logged in, redirecting to dashboard');
       this.router.navigate(['/dashboard']);
@@ -68,6 +78,7 @@ export class LoginComponent implements OnInit {
     console.log('Login: Attempting login with:', loginData);
     this.loading = true;
     this.errorMessage = '';
+    this.successMessage = '';
 
     this.authService.login(loginData).subscribe({
       next: (response) => {

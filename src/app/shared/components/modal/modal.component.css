@@ -1,0 +1,29 @@
+/* Animasi fade-in untuk backdrop */
+.fixed.inset-0.bg-black {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Animasi slide-in untuk modal */
+.relative.bg-white {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(20px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
