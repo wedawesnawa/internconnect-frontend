@@ -58,6 +58,11 @@ export class ApiService {
       withCredentials: options?.withCredentials || false
     });
   }
+  postFormData<T>(endpoint: string, formData: FormData, options?: { withCredentials?: boolean }): Observable<T> {
+    return this.http.post<T>(`${this.baseUrl}/${endpoint}`, formData, {
+      withCredentials: options?.withCredentials || false,
+    });
+  }
   putFormData<T>(endpoint: string, formData: FormData, options?: { withCredentials?: boolean }): Observable<T> {
     const headers = new HttpHeaders();
     return this.http.put<T>(`${this.baseUrl}/${endpoint}`, formData, {

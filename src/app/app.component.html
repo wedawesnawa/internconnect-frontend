@@ -1,2 +1,13 @@
+<!-- Loading Spinner -->
+<div *ngIf="isLoading" class="fixed inset-0 z-50 flex items-center justify-center bg-white/80">
+  <div class="flex flex-col items-center">
+    <div class="w-16 h-16 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+    <p class="mt-4 text-gray-600">Loading...</p>
+  </div>
+</div>
+
+<!-- Main Content -->
 <router-outlet></router-outlet>
+
+<!-- Alert Container -->
 <app-alert-container></app-alert-container>

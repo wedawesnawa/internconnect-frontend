@@ -45,15 +45,7 @@ export const routes: Routes = [
       },
       {
         path: 'logbook',
-        loadComponent: () => import('./feature/logbook/pages/logbook/logbook.component')
-          .then(m => m.LogbookComponent),
-        data: { title: 'Logbook' }
-      },
-      {
-        path: 'logbook/:id',
-        loadComponent: () => import('./feature/logbook/pages/detail-logbook/detail-logbook.component')
-          .then(m => m.DetailLogbookComponent),
-        data: { title: 'Detail Logbook' }
+        loadChildren: () => import('./feature/logbook/logbook.routes').then(m => m.LOGBOOK_ROUTES)
       },
       {
         path: 'monev',

@@ -3,6 +3,7 @@
   <div class="flex flex-wrap items-center justify-between mb-6">
     <div class="flex items-center justify-start">
       <span class="text-2xl font-semibold text-gray-900">Your Logbook</span>
+      <span *ngIf="loading" class="ml-3 text-sm text-gray-500">Loading...</span>
     </div>
     <div class="flex items-center">
       <button
@@ -18,11 +19,11 @@
   </div>
 
   <!-- Logbook Grid -->
-  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+  <div *ngIf="!loading" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
     <div *ngFor="let logbook of logbooks">
       <app-card
         [hoverable]="true"
-        imageUrl="/assets/images/default-logbook.jpg"
+        [imageUrl]="logbook.imageUrl || '/assets/images/default-logbook.jpg'"
         imageAlt="Logbook image">
 
         <!-- Dropdown di pojok kanan atas gambar -->
@@ -45,7 +46,8 @@
                 </li>
                 <li>
                   <button
-                    (click)="deleteLogbook(logbook.id)"
+                    *ngIf="logbook.kodeLogbook"
+                    (click)="deleteLogbook(logbook.kodeLogbook)"
                     class="block w-full px-4 py-2 text-sm text-left text-red-600 hover:bg-gray-100">
                     Delete
                   </button>
@@ -58,13 +60,13 @@
         <!-- Card Body Content -->
         <div class="space-y-2">
           <!-- Judul - 1 baris dengan ellipsis -->
-          <h4 class="text-sm font-semibold text-gray-900 truncate" title="{{ logbook.title }}">
-            {{ logbook.title }}
+          <h4 class="text-sm font-semibold text-gray-900 truncate" title="{{ logbook.content }}">
+            {{ logbook.content }}
           </h4>
 
           <!-- Deskripsi - 2 baris dengan ellipsis -->
           <p class="text-sm text-gray-600 line-clamp-2">
-            {{ logbook.description }}
+            {{ logbook.deskripsi }}
           </p>
 
           <!-- Status dan Tanggal -->
@@ -74,14 +76,14 @@
               {{ logbook.status }}
             </span>
             <span class="text-xs text-gray-500">
-              {{ logbook.dateStart }} - {{ logbook.dateEnd }}
+              {{ logbook.dateStart | date:'dd/MM/yyyy' }} - {{ logbook.dateEnd | date:'dd/MM/yyyy' }}
             </span>
           </div>
 
           <!-- View Details Link -->
           <div class="pt-2 border-t border-gray-200">
             <a
-              [routerLink]="['/logbook', logbook.id]"
+              [routerLink]="['/logbook', logbook.kodeLogbook]"
               class="text-sm font-medium text-blue-600 hover:text-blue-800">
               View Details →
             </a>
@@ -91,9 +93,24 @@
     </div>
   </div>
 
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex items-center justify-center py-12">
+    <div class="text-center">
+      <svg class="w-12 h-12 mx-auto text-blue-500 animate-spin" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <p class="mt-4 text-gray-500">Loading logbooks...</p>
+    </div>
+  </div>
+
   <!-- Empty State -->
-  <div *ngIf="logbooks.length === 0" class="py-12 text-center">
-    <p class="text-gray-500">No logbooks found. Create your first logbook!</p>
+  <div *ngIf="!loading && logbooks.length === 0" class="py-12 text-center">
+    <svg class="w-16 h-16 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+    </svg>
+    <p class="mt-4 text-gray-500">No logbooks found. Create your first logbook!</p>
+    <span class="bg-gray-100 border border-white text-gray-800 text-sm font-medium me-2 px-2.5 py-1 rounded"> Click button new logbook to create logbook</span>
   </div>
 </div>
 
@@ -106,21 +123,21 @@
 
   <form [formGroup]="logbookForm" (ngSubmit)="onSubmit()">
     <div class="space-y-4">
-      <!-- Title -->
+      <!-- Content -->
       <div>
-        <label for="title" class="block mb-2 text-sm font-medium text-gray-900">
-          Title Logbook <span class="text-red-500">*</span>
+        <label for="content" class="block mb-2 text-sm font-medium text-gray-900">
+          Title <span class="text-red-500">*</span>
         </label>
         <input
           type="text"
-          formControlName="title"
-          id="title"
+          formControlName="content"
+          id="content"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
           placeholder="Enter logbook title"
-          [class.border-red-500]="f['title'].invalid && f['title'].touched">
-        <div *ngIf="f['title'].invalid && f['title'].touched" class="mt-1 text-sm text-red-600">
-          <span *ngIf="f['title'].errors?.['required']">Title is required</span>
-          <span *ngIf="f['title'].errors?.['minlength']">Title must be at least 3 characters</span>
+          [class.border-red-500]="f['content'].invalid && f['content'].touched">
+        <div *ngIf="f['content'].invalid && f['content'].touched" class="mt-1 text-sm text-red-600">
+          <span *ngIf="f['content'].errors?.['required']">Content is required</span>
+          <span *ngIf="f['content'].errors?.['minlength']">Content must be at least 3 characters</span>
         </div>
       </div>
 
@@ -156,22 +173,54 @@
         </div>
       </div>
 
-      <!-- Description -->
+      <!-- Deskripsi -->
       <div>
-        <label for="description" class="block mb-2 text-sm font-medium text-gray-900">
-          Description <span class="text-red-500">*</span>
+        <label for="deskripsi" class="block mb-2 text-sm font-medium text-gray-900">
+          Deskripsi <span class="text-red-500">*</span>
         </label>
         <textarea
-          formControlName="description"
-          id="description"
+          formControlName="deskripsi"
+          id="deskripsi"
           rows="4"
           class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
           placeholder="Describe your logbook..."
-          [class.border-red-500]="f['description'].invalid && f['description'].touched">
+          [class.border-red-500]="f['deskripsi'].invalid && f['deskripsi'].touched">
         </textarea>
-        <div *ngIf="f['description'].invalid && f['description'].touched" class="mt-1 text-sm text-red-600">
-          <span *ngIf="f['description'].errors?.['required']">Description is required</span>
-          <span *ngIf="f['description'].errors?.['minlength']">Description must be at least 10 characters</span>
+        <div *ngIf="f['deskripsi'].invalid && f['deskripsi'].touched" class="mt-1 text-sm text-red-600">
+          <span *ngIf="f['deskripsi'].errors?.['required']">Deskripsi is required</span>
+          <span *ngIf="f['deskripsi'].errors?.['minlength']">Deskripsi must be at least 10 characters</span>
+        </div>
+      </div>
+
+      <!-- File Upload -->
+      <div>
+        <label for="deskripsi" class="block mb-2 text-sm font-medium text-gray-900">
+          Background Image
+        </label>
+        <div class="flex items-center justify-center w-full">
+          <label for="file-upload"
+            class="flex flex-col items-center justify-center w-full h-32 transition-colors border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+              <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+              </svg>
+              <p class="mb-2 text-sm text-gray-500">
+                <span class="font-semibold">Click to upload</span> or drag and drop
+              </p>
+              <p class="text-xs text-gray-500">
+                Image (JPG, PNG, Max 10MB)
+              </p>
+              <p *ngIf="fileName" class="mt-2 text-sm font-medium text-blue-600">
+                {{ fileName }}
+              </p>
+            </div>
+            <input
+              id="file-upload"
+              type="file"
+              class="hidden"
+              (change)="onFileSelected($event)"
+              accept=".jpg,.jpeg,.png" />
+          </label>
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-main-layout',
@@ -13,7 +14,8 @@ import { FooterComponent } from './components/footer/footer.component';
     RouterModule,
     HeaderComponent,
     SidebarComponent,
-    FooterComponent
+    BreadcrumbComponent
+    // FooterComponent
   ],
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.css']

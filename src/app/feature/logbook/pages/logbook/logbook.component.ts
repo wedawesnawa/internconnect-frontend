@@ -5,15 +5,8 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { AlertService } from '../../../../shared/services/alert.service';
-
-export interface Logbook {
-  id: number;
-  title: string;
-  description: string;
-  dateStart: string;
-  dateEnd: string;
-  status: string;
-}
+import { LogbookService } from '../../services/logbook.service';
+import { LogbookResponse, LogbookStatus } from '../../models/logbook.model';
 
 @Component({
   selector: 'app-logbook',
@@ -29,22 +22,26 @@ export interface Logbook {
   styleUrls: ['./logbook.component.css']
 })
 export class LogbookComponent implements OnInit {
-  logbooks: Logbook[] = [];
+  logbooks: LogbookResponse[] = [];
   isModalOpen = false;
   loading = false;
   logbookForm: FormGroup;
   isEditing = false;
-  editingId: number | null = null;
+  editingKode: string | null = null;
+  selectedFile: File | null = null;
+  fileName: string = '';
+  isSubmitting = false;
 
   constructor(
     private formBuilder: FormBuilder,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private logbookService: LogbookService
   ) {
     this.logbookForm = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.minLength(3)]],
+      content: ['', [Validators.required, Validators.minLength(3)]],
       dateStart: ['', [Validators.required]],
       dateEnd: ['', [Validators.required]],
-      description: ['', [Validators.required, Validators.minLength(10)]]
+      deskripsi: ['', [Validators.required, Validators.minLength(10)]]
     });
   }
 
@@ -53,33 +50,21 @@ export class LogbookComponent implements OnInit {
   }
 
   loadLogbooks(): void {
-    // Data dummy untuk contoh
-    this.logbooks = [
-      {
-        id: 1,
-        title: 'Logbook Project - Apple Watch Series 7 GPS',
-        description: 'Development of Apple Watch Series 7 GPS application with focus on health tracking features.',
-        dateStart: '01/11/2024',
-        dateEnd: '05/11/2024',
-        status: 'On Progress'
+    this.loading = true;
+    this.logbookService.getMyLogbooks().subscribe({
+      next: (data: LogbookResponse[]) => {
+        console.log('My logbooks loaded:', data);
+        console.log('Number of logbooks:', data.length);
+        this.logbooks = data || [];
+        this.loading = false;
+        console.log('logbooks array:', this.logbooks);
       },
-      {
-        id: 2,
-        title: 'Mobile App Development - E-Commerce',
-        description: 'Building a cross-platform e-commerce mobile application using Flutter.',
-        dateStart: '10/11/2024',
-        dateEnd: '20/11/2024',
-        status: 'Completed'
-      },
-      {
-        id: 3,
-        title: 'Data Analysis Dashboard',
-        description: 'Creating an interactive dashboard for data visualization using Angular and D3.js.',
-        dateStart: '15/11/2024',
-        dateEnd: '25/11/2024',
-        status: 'Pending'
+      error: (error: any) => {
+        console.error('Error loading logbooks:', error);
+        this.alertService.error(error.error?.message || 'Failed to load logbooks');
+        this.loading = false;
       }
-    ];
+    });
   }
 
   get f() {
@@ -87,33 +72,73 @@ export class LogbookComponent implements OnInit {
   }
 
   openModal(): void {
+    console.log('Opening modal for CREATE');
     this.isModalOpen = true;
     this.isEditing = false;
-    this.editingId = null;
+    this.editingKode = null;
+    this.selectedFile = null;
+    this.fileName = '';
     this.logbookForm.reset();
   }
 
   closeModal(): void {
     this.isModalOpen = false;
+    this.selectedFile = null;
+    this.fileName = '';
     this.logbookForm.reset();
+    this.isEditing = false;
+    this.editingKode = null;
   }
 
-  editLogbook(logbook: Logbook): void {
+  editLogbook(logbook: LogbookResponse): void {
+    console.log('=== EDITING LOGBOOK ===');
+    console.log('Logbook data:', logbook);
+    console.log('Logbook kodeLogbook:', logbook.kodeLogbook);
+
+    if (!logbook.kodeLogbook) {
+      console.error('Invalid logbook kodeLogbook:', logbook);
+      this.alertService.error('Cannot edit: Invalid logbook data');
+      return;
+    }
+
     this.isEditing = true;
-    this.editingId = logbook.id;
+    this.editingKode = logbook.kodeLogbook;
+
+    console.log('isEditing:', this.isEditing);
+    console.log('editingKode:', this.editingKode);
+
     this.logbookForm.patchValue({
-      title: logbook.title,
-      dateStart: logbook.dateStart,
-      dateEnd: logbook.dateEnd,
-      description: logbook.description
+      content: logbook.content || '',
+      dateStart: this.formatDateForInput(logbook.dateStart),
+      dateEnd: this.formatDateForInput(logbook.dateEnd),
+      deskripsi: logbook.deskripsi || ''
     });
+
+    console.log('Form values after patch:', this.logbookForm.value);
     this.isModalOpen = true;
   }
 
-  deleteLogbook(id: number): void {
+  deleteLogbook(kodeLogbook: string): void {
     if (confirm('Are you sure you want to delete this logbook?')) {
-      this.logbooks = this.logbooks.filter(l => l.id !== id);
-      this.alertService.success('Logbook deleted successfully!');
+      this.logbookService.deleteLogbook(kodeLogbook).subscribe({
+        next: () => {
+          this.alertService.success('Logbook deleted successfully!');
+          this.loadLogbooks();
+        },
+        error: (error: any) => {
+          console.error('Error deleting logbook:', error);
+          this.alertService.error(error.error?.message || 'Failed to delete logbook');
+        }
+      });
+    }
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+      this.fileName = this.selectedFile.name;
+      console.log('File selected:', this.selectedFile.name, 'Size:', this.selectedFile.size);
     }
   }
 
@@ -126,44 +151,87 @@ export class LogbookComponent implements OnInit {
       return;
     }
 
+    console.log('=== SUBMITTING LOGBOOK ===');
+    console.log('isEditing:', this.isEditing);
+    console.log('editingKode:', this.editingKode);
+    console.log('Form values:', this.logbookForm.value);
+
+    this.isSubmitting = true;
     this.loading = true;
 
     const formData = {
-      ...this.logbookForm.value,
-      status: 'On Progress'
+      content: this.logbookForm.value.content,
+      dateStart: this.formatDateToISO(this.logbookForm.value.dateStart),
+      dateEnd: this.formatDateToISO(this.logbookForm.value.dateEnd),
+      status: LogbookStatus.ONGOING,
+      deskripsi: this.logbookForm.value.deskripsi,
+      image: this.selectedFile || undefined
     };
 
-    // Simulasi API call
-    setTimeout(() => {
-      if (this.isEditing && this.editingId) {
-        // Update existing logbook
-        const index = this.logbooks.findIndex(l => l.id === this.editingId);
-        if (index !== -1) {
-          this.logbooks[index] = {
-            ...this.logbooks[index],
-            ...formData
-          };
-          this.alertService.success('Logbook updated successfully!');
-        }
-      } else {
-        // Add new logbook
-        const newLogbook: Logbook = {
-          id: this.logbooks.length + 1,
-          ...formData
-        };
-        this.logbooks.push(newLogbook);
-        this.alertService.success('Logbook created successfully!');
-      }
+    console.log('Form Data to send:', formData);
 
-      this.loading = false;
-      this.closeModal();
-    }, 1000);
+    if (this.isEditing === true && this.editingKode) {
+      // UPDATE mode - menggunakan kodeLogbook
+      console.log('✅ UPDATE mode - Kode:', this.editingKode);
+
+      this.logbookService.updateLogbook(this.editingKode, formData).subscribe({
+        next: (response: LogbookResponse) => {
+          console.log('Logbook updated:', response);
+          this.alertService.success('Logbook updated successfully!');
+          this.loading = false;
+          this.isSubmitting = false;
+          this.closeModal();
+          this.loadLogbooks();
+        },
+        error: (error: any) => {
+          console.error('Error updating logbook:', error);
+          this.alertService.error(error.error?.message || 'Failed to update logbook');
+          this.loading = false;
+          this.isSubmitting = false;
+        }
+      });
+    } else {
+      // CREATE mode
+      console.log('✅ CREATE mode');
+
+      this.logbookService.createLogbook(formData).subscribe({
+        next: (response: LogbookResponse) => {
+          console.log('Logbook created:', response);
+          this.alertService.success('Logbook created successfully!');
+          this.loading = false;
+          this.isSubmitting = false;
+          this.closeModal();
+          this.loadLogbooks();
+        },
+        error: (error: any) => {
+          console.error('Error creating logbook:', error);
+          this.alertService.error(error.error?.message || 'Failed to create logbook');
+          this.loading = false;
+          this.isSubmitting = false;
+        }
+      });
+    }
+  }
+
+  private formatDateToISO(date: string): string {
+    const d = new Date(date);
+    return d.toISOString();
+  }
+
+  private formatDateForInput(date: string): string {
+    if (!date) return '';
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   getStatusColor(status: string): string {
     const colors: { [key: string]: string } = {
-      'On Progress': 'bg-yellow-100 text-yellow-800 ',
-      'Completed': 'bg-green-100 text-green-800 ',
+      'Ongoing': 'bg-blue-100 text-blue-800',
+      'On Progress': 'bg-yellow-100 text-yellow-800',
+      'Completed': 'bg-green-100 text-green-800',
       'Pending': 'bg-red-100 text-red-800'
     };
     return colors[status] || 'bg-gray-100 text-gray-800';
