@@ -171,6 +171,7 @@
   </form>
 </app-modal>
 
+
 <!-- Share Modal -->
 <app-modal
   [isOpen]="isShareModalOpen"
@@ -178,93 +179,140 @@
   size="md"
   (close)="closeShareModal()">
 
-  <form (ngSubmit)="onSubmitShare()" class="space-y-4">
-    <!-- Email -->
-    <div>
-      <label for="share-email" class="block mb-2 text-sm font-medium text-gray-900">
-        Email Address <span class="text-red-500">*</span>
-      </label>
-      <input
-        type="email"
-        id="share-email"
-        [(ngModel)]="shareData.email"
-        name="email"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-        placeholder="mentor@example.com"
-        required>
-      <p class="mt-1 text-xs text-gray-500">Enter the email of the person you want to share with</p>
-    </div>
+  <!-- Step 1: Select Role -->
+  <div *ngIf="shareStep === 'select-role'" class="space-y-4">
+    <p class="text-sm text-gray-600">
+      Select the role of the person you want to share this logbook with.
+    </p>
 
-    <!-- Role -->
-    <div>
-      <label for="share-role" class="block mb-2 text-sm font-medium text-gray-900">
-        Share As <span class="text-red-500">*</span>
-      </label>
-      <select
-        id="share-role"
-        [(ngModel)]="shareData.role"
-        name="role"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-        <option value="mentor">Mentor</option>
-        <option value="dosen">Dosen Pembimbing</option>
-        <option value="coordinator">Coordinator</option>
-        <option value="student">Student</option>
-      </select>
-      <p class="mt-1 text-xs text-gray-500">Select the role of the recipient</p>
-    </div>
-
-    <!-- Message -->
-    <div>
-      <label for="share-message" class="block mb-2 text-sm font-medium text-gray-900">
-        Message <span class="text-red-500">*</span>
-      </label>
-      <textarea
-        id="share-message"
-        [(ngModel)]="shareData.message"
-        name="message"
-        rows="4"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-        placeholder="Hi, I'd like to share this logbook with you..."
-        required>
-      </textarea>
-      <p class="mt-1 text-xs text-gray-500">Add a personal message to the recipient</p>
-    </div>
-
-    <!-- Info Box -->
-    <div class="p-3 border border-blue-200 rounded-lg bg-blue-50">
-      <p class="text-sm text-blue-800">
-        <span class="font-semibold">ℹ️ Info:</span>
-        This logbook will be shared with <strong>{{ shareData.email || 'recipient' }}</strong>
-        as a <strong>{{ shareData.role || 'mentor' }}</strong>.
-      </p>
-    </div>
-
-    <!-- Modal Footer -->
-    <div class="flex justify-end pt-4 space-x-3 border-t border-gray-200">
+    <div class="grid grid-cols-2 gap-4">
       <button
-        type="button"
-        (click)="closeShareModal()"
-        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-gray-200">
-        Cancel
+        (click)="selectRole('Mentor')"
+        class="p-4 text-center transition-all border-2 rounded-lg hover:border-blue-500 hover:bg-blue-50">
+        <div class="flex justify-center mb-2 text-3xl"><img class="w-24 h-24 rounded-full" src="/assets/images/userpkl.png" alt="image description"></div>
+        <div class="font-semibold text-gray-800">Mentor</div>
+        <div class="text-xs text-gray-500">Guide and assess students</div>
       </button>
+
       <button
-        type="submit"
-        [disabled]="isSharing || !shareData.email || !shareData.message"
-        class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:ring-green-300 disabled:opacity-50 disabled:cursor-not-allowed">
-        <span *ngIf="!isSharing">
-          <svg class="inline w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"/>
-          </svg>
-          Send Share
-        </span>
-        <span *ngIf="isSharing" class="flex items-center">
-          <svg class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          Sending...
-        </span>
+        (click)="selectRole('Supervisor')"
+        class="p-4 text-center transition-all border-2 rounded-lg hover:border-blue-500 hover:bg-blue-50">
+        <div class="flex justify-center mb-2 text-3xl"><img class="w-24 h-24 bg-gray-200 rounded-full" src="/assets/images/userdosen.png" alt="image description"></div>
+        <div class="font-semibold text-gray-800">Supervisor</div>
+        <div class="text-xs text-gray-500">Oversee internship activities</div>
       </button>
     </div>
-  </form>
+  </div>
+
+  <!-- Step 2: Select User -->
+  <div *ngIf="shareStep === 'select-user'" class="space-y-4">
+    <div class="flex items-center justify-between">
+      <button
+        (click)="goBackToRoleSelection()"
+        class="flex items-center text-sm text-blue-600 hover:text-blue-800">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back
+      </button>
+      <span class="text-sm font-medium text-gray-500">
+        {{ usersByRole.length }} {{ shareData.selectedRole }}s
+      </span>
+    </div>
+
+    <p class="text-sm text-gray-600">
+      Select the {{ shareData.selectedRole }} you want to share this logbook with.
+    </p>
+
+    <!-- Loading -->
+    <div *ngIf="isLoadingUsers" class="py-8 text-center">
+      <div class="inline-block w-8 h-8 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+      <p class="mt-2 text-sm text-gray-500">Loading users...</p>
+    </div>
+
+    <!-- User List -->
+    <div *ngIf="!isLoadingUsers" class="space-y-2 overflow-y-auto max-h-64">
+      <button
+        *ngFor="let user of usersByRole"
+        (click)="selectUser(user.username)"
+        class="w-full p-3 text-left transition-all border rounded-lg hover:bg-gray-50"
+        [class.border-blue-500]="isUserSelected(user.username)"
+        [class.bg-blue-50]="isUserSelected(user.username)">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-medium text-gray-800">{{ user.username }}</div>
+            <div class="text-xs text-gray-500">{{ user.role }}</div>
+          </div>
+          <div *ngIf="isUserSelected(user.username)" class="text-blue-500">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+        </div>
+      </button>
+
+      <div *ngIf="usersByRole.length === 0" class="py-8 text-center text-gray-500">
+        No {{ shareData.selectedRole }}s found
+      </div>
+    </div>
+
+    <!-- Permission -->
+    <div *ngIf="shareData.selectedUsername" class="space-y-2">
+      <label class="block mb-2 text-sm font-medium text-gray-900">
+        Permission <span class="text-red-500">*</span>
+      </label>
+      <div class="flex gap-4">
+        <label class="flex items-center">
+          <input
+            type="radio"
+            name="permission"
+            value="read"
+            [(ngModel)]="shareData.permission"
+            class="w-4 h-4 text-blue-600"
+            checked>
+          <span class="ml-2 text-sm text-gray-700">Read Only</span>
+        </label>
+        <label class="flex items-center">
+          <input
+            type="radio"
+            name="permission"
+            value="write"
+            [(ngModel)]="shareData.permission"
+            class="w-4 h-4 text-blue-600">
+          <span class="ml-2 text-sm text-gray-700">Read & Write</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      *ngIf="shareData.selectedUsername"
+      (click)="onSubmitShare()"
+      [disabled]="isSharing || !shareData.permission"
+      class="w-full py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:ring-green-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+      <span *ngIf="!isSharing">
+        <svg class="inline w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"/>
+        </svg>
+        Share to {{ shareData.selectedUsername }}
+      </span>
+      <span *ngIf="isSharing" class="flex items-center justify-center">
+        <svg class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Sharing...
+      </span>
+    </button>
+  </div>
+
+  <!-- Modal Footer (Cancel button) -->
+  <div class="flex justify-end pt-4 mt-4 border-t border-gray-200">
+    <button
+      type="button"
+      (click)="closeShareModal()"
+      class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-gray-200">
+      Cancel
+    </button>
+  </div>
 </app-modal>

@@ -92,7 +92,33 @@ export interface UpdateDetailLogbookRequest {
   deskripsi: string;
   kendala: string;
   statusAttend: string;
-  timeStart: string; // Format: "HH:MM:SS"
-  timeEnd: string;   // Format: "HH:MM:SS"
+  timeStart: string;
+  timeEnd: string;
   status: string;
+}
+
+export interface UserByRole {
+  username: string;
+  role: string;
+}
+
+// Share Logbook Request
+export interface CreateSharedRequest {
+  sharedWith: string;
+  permission: string;
+}
+
+export interface SharedResponse {
+  idShared: number;
+  sharedWith: string;
+  permission: string;
+  kodeLogbook: string;
+  sharedBy: string;
+  createdAt?: string;
+}
+
+
+export enum SharedPermission {
+  READ = 'read',
+  WRITE = 'write'
 }

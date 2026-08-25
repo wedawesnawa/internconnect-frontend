@@ -9,7 +9,9 @@ import {
   LogbookDetailResponse,
   DetailLogbookResponse,
   CreateDetailLogbookRequest,
-  UpdateDetailLogbookRequest
+  UpdateDetailLogbookRequest,
+  CreateSharedRequest,
+  SharedResponse
 } from '../models/logbook.model';
 
 @Injectable({
@@ -104,13 +106,6 @@ export class LogbookService {
     return this.apiService.delete(`Logbook/delete/${kodeLogbook}`, { withCredentials: true });
   }
 
-  /**
-   * Share logbook
-   */
-  shareLogbook(id: number, data: { email: string; message: string; role: string }): Observable<any> {
-    return this.apiService.post(`Logbook/${id}/share`, data, { withCredentials: true });
-  }
-
   // Detail Logbook
 
   getDetailLogbooks(kodeLogbook: string): Observable<DetailLogbookResponse[]> {
@@ -140,6 +135,15 @@ export class LogbookService {
   updateDetailLogbook(id: number, data: UpdateDetailLogbookRequest): Observable<DetailLogbookResponse> {
     return this.apiService.put<DetailLogbookResponse>(
       `DetailLogbook/${id}/update`,
+      data,
+      { withCredentials: true }
+    );
+  }
+
+  // Share logbook
+  shareLogbook(kodeLogbook: string, data: CreateSharedRequest): Observable<SharedResponse> {
+    return this.apiService.post<SharedResponse>(
+      `Shared/${kodeLogbook}/create`,
       data,
       { withCredentials: true }
     );

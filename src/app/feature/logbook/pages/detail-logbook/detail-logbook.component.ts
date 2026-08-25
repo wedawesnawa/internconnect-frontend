@@ -15,8 +15,12 @@ import {
   LogbookDetailResponse,
   CreateDetailLogbookRequest,
   DetailLogbookResponse,
-  DetailLogbookStatus
+  DetailLogbookStatus,
+  UserByRole,
+  CreateSharedRequest,
+  SharedResponse
 } from '../../models/logbook.model';
+import { UserService } from '../../../users/services/user.service';
 
 @Component({
   selector: 'app-detail-logbook',
@@ -44,11 +48,14 @@ export class DetailLogbookComponent implements OnInit, AfterViewInit {
 
   // Share Modal
   isShareModalOpen: boolean = false;
+  shareStep: 'select-role' | 'select-user' = 'select-role';
   shareData = {
-    email: '',
-    message: '',
-    role: 'mentor'
+    selectedRole: '',
+    selectedUsername: '',
+    permission: 'read'
   };
+  usersByRole: UserByRole[] = [];
+  isLoadingUsers: boolean = false;
   isSharing: boolean = false;
 
   // Single Activity Modal (Create/View)
@@ -73,6 +80,7 @@ export class DetailLogbookComponent implements OnInit, AfterViewInit {
     private alertService: AlertService,
     private router: Router,
     private logbookService: LogbookService,
+    private userService: UserService,
   ) {}
 
   ngOnInit(): void {
@@ -515,16 +523,179 @@ export class DetailLogbookComponent implements OnInit, AfterViewInit {
 
   // ============= SHARE MODAL METHODS =============
   openShareModal(): void {
+    console.log('=== OPEN SHARE MODAL ===');
+    console.log('KodeLogbook:', this.kodeLogbook);
+    console.log('Logbook data:', this.logbook);
+
     this.isShareModalOpen = true;
+    this.shareStep = 'select-role';
     this.shareData = {
-      email: '',
-      message: '',
-      role: 'mentor'
+      selectedRole: '',
+      selectedUsername: '',
+      permission: 'Read'
     };
+    this.usersByRole = [];
+    console.log('Share modal opened, step: select-role');
   }
 
   closeShareModal(): void {
+    console.log('=== CLOSE SHARE MODAL ===');
     this.isShareModalOpen = false;
+    this.shareStep = 'select-role';
+    this.isSharing = false;
+    this.isLoadingUsers = false;
+    this.shareData = {
+      selectedRole: '',
+      selectedUsername: '',
+      permission: 'Read'
+    };
+    this.usersByRole = [];
+    console.log('Share modal closed');
+  }
+
+  // Pilih role, lalu load users berdasarkan role
+  selectRole(role: string): void {
+    console.log('=== SELECT ROLE ===');
+    console.log('Selected role:', role);
+    console.log('KodeLogbook:', this.kodeLogbook);
+
+    this.shareData.selectedRole = role;
+    this.isLoadingUsers = true;
+    console.log('Loading users with role:', role);
+
+    this.userService.getUsersByRole(role).subscribe({
+      next: (users: UserByRole[]) => {
+        console.log('=== USERS LOADED ===');
+        console.log('Role:', role);
+        console.log('Users found:', users);
+        console.log('Total users:', users.length);
+
+        // Log detail setiap user
+        users.forEach((user, index) => {
+          console.log(`User ${index + 1}:`, {
+            username: user.username,
+            role: user.role
+          });
+        });
+
+        this.usersByRole = users;
+        this.isLoadingUsers = false;
+        this.shareStep = 'select-user';
+        console.log('Step changed to: select-user');
+      },
+      error: (error: any) => {
+        console.error('=== ERROR LOADING USERS ===');
+        console.error('Role:', role);
+        console.error('Error:', error);
+        this.alertService.error('Failed to load users');
+        this.isLoadingUsers = false;
+      }
+    });
+  }
+
+  // Pilih user yang akan di-share
+  selectUser(username: string): void {
+    console.log('=== SELECT USER ===');
+    console.log('Selected username:', username);
+    console.log('Current selected role:', this.shareData.selectedRole);
+    console.log('Available users:', this.usersByRole);
+
+    this.shareData.selectedUsername = username;
+
+    // Cari user yang dipilih
+    const selectedUser = this.usersByRole.find(u => u.username === username);
+    console.log('Selected user details:', selectedUser);
+  }
+
+  isUserSelected(username: string): boolean {
+    const isSelected = this.shareData.selectedUsername === username;
+    if (isSelected) {
+      console.log('User is selected:', username);
+    }
+    return isSelected;
+  }
+
+  goBackToRoleSelection(): void {
+    console.log('=== GO BACK TO ROLE SELECTION ===');
+    console.log('Current step:', this.shareStep);
+    this.shareStep = 'select-role';
+    this.usersByRole = [];
+    this.shareData.selectedUsername = '';
+    console.log('Step changed to: select-role');
+  }
+
+  onSubmitShare(): void {
+    console.log('=== SUBMIT SHARE ===');
+    console.log('KodeLogbook:', this.kodeLogbook);
+    console.log('Share Data:', {
+      selectedUsername: this.shareData.selectedUsername,
+      permission: this.shareData.permission
+    });
+
+    // Validasi
+    if (!this.shareData.selectedUsername) {
+      console.warn('Validation failed: No user selected');
+      this.alertService.error('Please select a user');
+      return;
+    }
+
+
+    console.log('Validation passed, preparing payload...');
+    this.isSharing = true;
+
+    // Prepare payload
+    const sharePayload: CreateSharedRequest = {
+      sharedWith: this.shareData.selectedUsername,
+      permission: this.shareData.permission || 'Read'
+    };
+
+    console.log('=== SHARE PAYLOAD ===');
+    console.log('Endpoint:', `Shared/${this.kodeLogbook}/create`);
+    console.log('Payload:', sharePayload);
+    console.log('Payload as JSON:', JSON.stringify(sharePayload, null, 2));
+
+    this.logbookService.shareLogbook(this.kodeLogbook, sharePayload).subscribe({
+      next: (response: SharedResponse) => {
+        console.log('=== SHARE SUCCESS ===');
+        console.log('Response:', response);
+        console.log('Shared to:', response.sharedWith);
+        console.log('Permission:', response.permission);
+        console.log('Shared by:', response.sharedBy);
+        console.log('Created at:', response.createdAt);
+
+        this.alertService.success(`Logbook shared successfully to ${this.shareData.selectedUsername}!`);
+        this.isSharing = false;
+        this.closeShareModal();
+        console.log('Share modal closed after success');
+      },
+      error: (error: any) => {
+        console.error('=== SHARE ERROR ===');
+        console.error('Error object:', error);
+        console.error('Error status:', error.status);
+        console.error('Error status text:', error.statusText);
+        console.error('Error message:', error.message);
+
+        if (error.error) {
+          console.error('Error response body:', error.error);
+          if (typeof error.error === 'object') {
+            console.error('Error details:', JSON.stringify(error.error, null, 2));
+          }
+        }
+
+        let errorMessage = 'Failed to share logbook';
+        if (error.error?.message) {
+          errorMessage = error.error.message;
+          console.log('Using error message from server:', errorMessage);
+        } else if (error.message) {
+          errorMessage = error.message;
+          console.log('Using error message from error object:', errorMessage);
+        }
+
+        this.alertService.error(errorMessage);
+        this.isSharing = false;
+        console.log('Share failed, error state reset');
+      }
+    });
   }
 
   getStatusColor(status: string): string {
@@ -580,26 +751,5 @@ export class DetailLogbookComponent implements OnInit, AfterViewInit {
       return `${parts[0]}:${parts[1]}`;
     }
     return time;
-  }
-
-  onSubmitShare(): void {
-    if (!this.shareData.email) {
-      this.alertService.error('Please enter an email address');
-      return;
-    }
-
-    if (!this.shareData.message) {
-      this.alertService.error('Please enter a message');
-      return;
-    }
-
-    this.isSharing = true;
-
-    setTimeout(() => {
-      console.log('Share Data:', this.shareData);
-      this.isSharing = false;
-      this.closeShareModal();
-      this.alertService.success(`Logbook shared successfully to ${this.shareData.email}!`);
-    }, 1500);
   }
 }
