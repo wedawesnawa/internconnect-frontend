@@ -1,1 +1,211 @@
-<p>table works!</p>
+<div class="bg-white rounded-lg shadow overflow-hidden">
+  <!-- Toolbar -->
+  <div class="flex flex-wrap items-center justify-between p-4 border-b border-gray-200">
+    <div class="flex items-center space-x-4">
+      <!-- Search -->
+      <div *ngIf="config.showSearch" class="relative">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+        <input
+          type="text"
+          [placeholder]="config.searchPlaceholder || 'Search...'"
+          (input)="onSearch($event)"
+          class="block w-48 pl-10 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+      </div>
+
+      <!-- Filter (Slot) -->
+      <ng-content select="[table-filter]"></ng-content>
+    </div>
+
+    <div class="flex items-center space-x-3">
+      <!-- Page Size -->
+      <div *ngIf="pageSizeOptions.length > 0" class="flex items-center space-x-2">
+        <label class="text-sm text-gray-600">Show</label>
+        <select
+          (change)="onPageSizeChange($event)"
+          [value]="pageSize"
+          class="px-2 py-1 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+          <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+        </select>
+      </div>
+
+      <!-- Actions (Slot) -->
+      <ng-content select="[table-actions]"></ng-content>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm text-left text-gray-500">
+      <!-- Header -->
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+        <tr>
+          <!-- Index Column -->
+          <th *ngIf="config.showIndex" class="px-4 py-3 w-12 text-center">
+            {{ config.indexLabel || '#' }}
+          </th>
+
+          <!-- Data Columns -->
+          <th
+            *ngFor="let column of config.columns"
+            [style.width]="column.width || 'auto'"
+            [class]="getAlignmentClass(column.align)"
+            class="px-4 py-3 font-medium"
+            [class.cursor-pointer]="column.sortable"
+            (click)="onSort(column.key)">
+            {{ column.label }}
+            <span *ngIf="column.sortable" class="ml-1 text-gray-400">
+              {{ getSortIcon(column.key) }}
+            </span>
+          </th>
+
+          <!-- Custom Header -->
+          <ng-container *ngIf="customHeader">
+            <ng-template [ngTemplateOutlet]="customHeader"></ng-template>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <th *ngIf="config.actions && config.actions.length > 0" class="px-4 py-3 text-center w-24">
+            Actions
+          </th>
+        </tr>
+      </thead>
+
+      <!-- Body -->
+      <tbody>
+        <!-- Loading State -->
+        <tr *ngIf="loading">
+          <td [attr.colspan]="getTotalColumns()" class="px-4 py-8 text-center">
+            <div class="flex items-center justify-center space-x-2">
+              <div class="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+              <span class="text-gray-500">{{ config.loadingMessage || 'Loading...' }}</span>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Empty State -->
+        <tr *ngIf="!loading && data.length === 0">
+          <td [attr.colspan]="getTotalColumns()" class="px-4 py-8 text-center">
+            <div class="text-gray-500">
+              <svg class="w-12 h-12 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+              <p class="mt-2">{{ config.emptyMessage || 'No data available' }}</p>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Data Rows -->
+        <ng-container *ngFor="let item of data; let i = index">
+          <tr
+            [class]="getRowClass(item)"
+            class="border-b hover:bg-gray-50 transition-colors">
+
+            <!-- Index -->
+            <td *ngIf="config.showIndex" class="px-4 py-3 text-center text-gray-500">
+              {{ startIndex + i }}
+            </td>
+
+            <!-- Data Cells -->
+            <td
+              *ngFor="let column of config.columns"
+              [class]="getAlignmentClass(column.align)"
+              class="px-4 py-3 text-gray-800">
+
+              <!-- Custom Cell Template -->
+              <ng-container *ngIf="customCell; else defaultCell">
+                <ng-template
+                  [ngTemplateOutlet]="customCell"
+                  [ngTemplateOutletContext]="{
+                    item: item,
+                    column: column,
+                    value: getCellValue(item, column)
+                  }">
+                </ng-template>
+              </ng-container>
+
+              <!-- Default Cell -->
+              <ng-template #defaultCell>
+                {{ getCellValue(item, column) }}
+              </ng-template>
+            </td>
+
+            <!-- Custom Columns -->
+            <ng-container *ngIf="customHeader">
+              <ng-template [ngTemplateOutlet]="customHeader" [ngTemplateOutletContext]="{ item: item }"></ng-template>
+            </ng-container>
+
+            <!-- Actions -->
+            <td *ngIf="config.actions && config.actions.length > 0" class="px-4 py-3 text-center">
+              <div class="flex items-center justify-center space-x-1">
+                <!-- Custom Actions -->
+                <ng-container *ngIf="customActions; else defaultActions">
+                  <ng-template
+                    [ngTemplateOutlet]="customActions"
+                    [ngTemplateOutletContext]="{ item: item }">
+                  </ng-template>
+                </ng-container>
+
+                <!-- Default Actions -->
+                <ng-template #defaultActions>
+                  <button
+                    *ngFor="let action of getVisibleActions(item)"
+                    (click)="action.action(item)"
+                    [class]="action.class || 'px-2 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded'"
+                    [title]="action.label">
+                    <span *ngIf="action.icon">{{ action.icon }}</span>
+                    {{ action.label }}
+                  </button>
+                </ng-template>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="totalItems > 0" class="flex flex-wrap items-center justify-between p-4 border-t border-gray-200">
+    <div class="text-sm text-gray-500">
+      Showing <span class="font-medium">{{ startIndex }}</span>
+      to <span class="font-medium">{{ endIndex }}</span>
+      of <span class="font-medium">{{ totalItems }}</span> results
+    </div>
+
+    <div class="flex items-center space-x-1">
+      <button
+        (click)="onPageChange(1)"
+        [disabled]="currentPage === 1"
+        class="px-3 py-1 text-sm border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+        «
+      </button>
+      <button
+        (click)="onPageChange(currentPage - 1)"
+        [disabled]="currentPage === 1"
+        class="px-3 py-1 text-sm border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+        ‹
+      </button>
+
+      <span class="px-3 py-1 text-sm text-blue-600 bg-blue-50 rounded">
+        {{ currentPage }}
+      </span>
+
+      <button
+        (click)="onPageChange(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+        class="px-3 py-1 text-sm border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+        ›
+      </button>
+      <button
+        (click)="onPageChange(totalPages)"
+        [disabled]="currentPage === totalPages"
+        class="px-3 py-1 text-sm border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+        »
+      </button>
+    </div>
+  </div>
+</div>
