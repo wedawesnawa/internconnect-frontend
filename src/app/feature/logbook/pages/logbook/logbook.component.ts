@@ -32,6 +32,11 @@ export class LogbookComponent implements OnInit {
   fileName: string = '';
   isSubmitting = false;
 
+  isMonevModalOpen = false;
+  monevForm: FormGroup;
+  selectedKodeLogbook: string | null = null;
+  isSubmittingMonev = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private alertService: AlertService,
@@ -42,6 +47,12 @@ export class LogbookComponent implements OnInit {
       dateStart: ['', [Validators.required]],
       dateEnd: ['', [Validators.required]],
       deskripsi: ['', [Validators.required, Validators.minLength(10)]]
+    });
+
+    this.monevForm = this.formBuilder.group({
+      date: ['', [Validators.required]],
+      timeStart: ['', [Validators.required]],
+      timeEnd: ['', [Validators.required]]
     });
   }
 
@@ -235,5 +246,73 @@ export class LogbookComponent implements OnInit {
       'Pending': 'bg-red-100 text-red-800'
     };
     return colors[status] || 'bg-gray-100 text-gray-800';
+  }
+
+  // Monev
+  openMonevModal(kodeLogbook: string): void {
+    console.log('=== OPEN MONTEV MODAL ===');
+    console.log('KodeLogbook:', kodeLogbook);
+
+    this.selectedKodeLogbook = kodeLogbook;
+    this.isMonevModalOpen = true;
+    this.monevForm.reset();
+
+    // Set default date to today
+    const today = new Date().toISOString().split('T')[0];
+    this.monevForm.patchValue({
+      date: today
+    });
+  }
+
+  closeMonevModal(): void {
+    this.isMonevModalOpen = false;
+    this.selectedKodeLogbook = null;
+    this.monevForm.reset();
+    this.isSubmittingMonev = false;
+  }
+
+  onSubmitMonev(): void {
+    if (this.monevForm.invalid) {
+      Object.keys(this.monevForm.controls).forEach(key => {
+        const control = this.monevForm.get(key);
+        control?.markAsTouched();
+      });
+      return;
+    }
+
+    if (!this.selectedKodeLogbook) {
+      this.alertService.error('No logbook selected');
+      return;
+    }
+
+    this.isSubmittingMonev = true;
+
+    const payload = {
+      kodeLogbook: this.selectedKodeLogbook,
+      date: new Date(this.monevForm.value.date).toISOString(),
+      timeStart: this.monevForm.value.timeStart + ':00',
+      timeEnd: this.monevForm.value.timeEnd + ':00'
+    };
+
+    console.log('=== SUBMITTING MONTEV ===');
+    console.log('Payload:', payload);
+
+    this.logbookService.createMonev(payload).subscribe({
+      next: (response) => {
+        console.log('Monev created:', response);
+        this.alertService.success('Monev created successfully!');
+        this.isSubmittingMonev = false;
+        this.closeMonevModal();
+      },
+      error: (error: any) => {
+        console.error('Error creating monev:', error);
+        this.alertService.error(error.error?.message || 'Failed to create monev');
+        this.isSubmittingMonev = false;
+      }
+    });
+  }
+
+  get fMonev() {
+    return this.monevForm.controls;
   }
 }

@@ -1,0 +1,106 @@
+.monev-calendar {
+  width: 100%;
+}
+
+/* Sembunyikan body calendar, tampilkan hanya header */
+:host ::ng-deep .fc .fc-daygrid-body {
+  display: none !important;
+}
+
+:host ::ng-deep .fc .fc-daygrid-day-events {
+  display: none !important;
+}
+
+:host ::ng-deep .fc .fc-daygrid-day-number {
+  display: none !important;
+}
+
+:host ::ng-deep .fc .fc-daygrid-day-frame {
+  display: none !important;
+}
+
+:host ::ng-deep .fc .fc-daygrid-day {
+  display: none !important;
+}
+
+:host ::ng-deep .fc .fc-scrollgrid-sync-table {
+  display: none !important;
+}
+
+/* Tampilkan header dengan minimal jarak */
+:host ::ng-deep .fc .fc-toolbar {
+  display: flex !important;
+  margin-bottom: 0 !important;
+  padding: 12px 16px !important;
+  background: white;
+  border-radius: 8px 8px 0 0;
+}
+
+:host ::ng-deep .fc .fc-toolbar-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+:host ::ng-deep .fc .fc-button-primary {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  font-size: 0.85rem;
+  padding: 6px 12px;
+}
+
+:host ::ng-deep .fc .fc-button-primary:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+:host ::ng-deep .fc .fc-button-primary:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+:host ::ng-deep .fc .fc-button-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Hilangkan view harness (body calendar) */
+:host ::ng-deep .fc .fc-view-harness {
+  height: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+:host ::ng-deep .fc .fc-scrollgrid {
+  height: 0 !important;
+  min-height: 0 !important;
+  border: none !important;
+}
+
+:host ::ng-deep .fc .fc-scrollgrid-section {
+  display: none !important;
+}
+
+/* Card container - langsung di bawah header */
+.monev-cards-container {
+  /* background: white;
+  border-radius: 0 0 8px 8px; */
+  padding: 12px 16px;
+}
+
+/* Card items */
+.monev-card-item {
+  margin-bottom: 8px;
+}
+
+.monev-card-item:last-child {
+  margin-bottom: 0;
+}
+
+/* FullCalendar wrapper */
+:host ::ng-deep .fc {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}

@@ -55,8 +55,10 @@ export class DetailLogbookComponent implements OnInit, AfterViewInit {
     permission: 'read'
   };
   usersByRole: UserByRole[] = [];
+  sharedUsers: SharedResponse[] = []; // Tambahkan ini
   isLoadingUsers: boolean = false;
   isSharing: boolean = false;
+  isLoadingShared: boolean = false;
 
   // Single Activity Modal (Create/View)
   isActivityModalOpen: boolean = false;
@@ -91,6 +93,7 @@ export class DetailLogbookComponent implements OnInit, AfterViewInit {
       if (this.kodeLogbook) {
         this.loadLogbookDetail();
         this.loadDetailLogbooks();
+        this.loadSharedUsers();
       } else {
         this.errorMessage = 'Logbook code not found';
         this.loading = false;
@@ -536,6 +539,7 @@ export class DetailLogbookComponent implements OnInit, AfterViewInit {
     };
     this.usersByRole = [];
     console.log('Share modal opened, step: select-role');
+    this.loadSharedUsers();
   }
 
   closeShareModal(): void {
@@ -551,6 +555,26 @@ export class DetailLogbookComponent implements OnInit, AfterViewInit {
     };
     this.usersByRole = [];
     console.log('Share modal closed');
+  }
+
+  loadSharedUsers(): void {
+    this.isLoadingShared = true;
+    console.log('Loading shared users for kode:', this.kodeLogbook);
+
+    this.logbookService.getSharedLogbooks(this.kodeLogbook).subscribe({
+      next: (response: SharedResponse[]) => {
+        console.log('Shared users loaded:', response);
+        this.sharedUsers = response || [];
+        this.isLoadingShared = false;
+        console.log('Total shared users:', this.sharedUsers.length);
+      },
+      error: (error: any) => {
+        console.error('Error loading shared users:', error);
+        // Jika error 404 atau 500, set array kosong
+        this.sharedUsers = [];
+        this.isLoadingShared = false;
+      }
+    });
   }
 
   // Pilih role, lalu load users berdasarkan role
@@ -591,6 +615,48 @@ export class DetailLogbookComponent implements OnInit, AfterViewInit {
         this.isLoadingUsers = false;
       }
     });
+  }
+
+  removeSharedUser(idShared: number): void {
+    console.log('=== REMOVE SHARED USER ===');
+    console.log('ID Shared:', idShared);
+    console.log('KodeLogbook:', this.kodeLogbook);
+
+    if (confirm('Are you sure you want to remove this user\'s access?')) {
+      console.log('User confirmed deletion');
+      this.isLoadingShared = true;
+
+      this.logbookService.deleteSharedLogbook(this.kodeLogbook, idShared).subscribe({
+        next: (response: any) => {
+          console.log('=== DELETE SUCCESS ===');
+          console.log('Response:', response);
+          this.alertService.success('User access removed successfully!');
+          this.loadSharedUsers(); // Refresh list
+        },
+        error: (error: any) => {
+          console.error('=== DELETE ERROR ===');
+          console.error('Error:', error);
+          console.error('Status:', error.status);
+          console.error('Message:', error.message);
+
+          if (error.error) {
+            console.error('Error body:', error.error);
+          }
+
+          let errorMessage = 'Failed to remove user access';
+          if (error.error?.message) {
+            errorMessage = error.error.message;
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+
+          this.alertService.error(errorMessage);
+          this.isLoadingShared = false;
+        }
+      });
+    } else {
+      console.log('User cancelled deletion');
+    }
   }
 
   // Pilih user yang akan di-share

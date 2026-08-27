@@ -11,8 +11,13 @@ import {
   CreateDetailLogbookRequest,
   UpdateDetailLogbookRequest,
   CreateSharedRequest,
-  SharedResponse
+  SharedResponse,
 } from '../models/logbook.model';
+import {
+  CreateMonevRequest,
+  MonevResponse,
+  MonevListResponse
+} from '../../monev/models/monev.model';
 
 @Injectable({
   providedIn: 'root'
@@ -144,6 +149,38 @@ export class LogbookService {
   shareLogbook(kodeLogbook: string, data: CreateSharedRequest): Observable<SharedResponse> {
     return this.apiService.post<SharedResponse>(
       `Shared/${kodeLogbook}/create`,
+      data,
+      { withCredentials: true }
+    );
+  }
+
+  getSharedLogbooks(kodeLogbook: string): Observable<SharedResponse[]> {
+    return this.apiService.get<SharedResponse[]>(
+      `Shared/${kodeLogbook}/all`,
+      undefined,
+      { withCredentials: true }
+    );
+  }
+
+  deleteSharedLogbook(kodeLogbook: string, idShared: number): Observable<any> {
+    console.log('=== DELETE SHARED LOGBOOK ===');
+    console.log('KodeLogbook:', kodeLogbook);
+    console.log('ID Shared:', idShared);
+    console.log('Endpoint:', `Shared/${kodeLogbook}/delete/${idShared}`);
+
+    return this.apiService.delete(
+      `Shared/${kodeLogbook}/delete/${idShared}`,
+      { withCredentials: true }
+    );
+  }
+
+  // Monev
+  createMonev(data: CreateMonevRequest): Observable<MonevResponse> {
+    console.log('=== CREATE MONTEV ===');
+    console.log('Payload:', data);
+
+    return this.apiService.post<MonevResponse>(
+      'Monev/ajukan-monev',
       data,
       { withCredentials: true }
     );
