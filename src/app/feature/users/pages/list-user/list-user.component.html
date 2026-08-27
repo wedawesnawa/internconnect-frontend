@@ -1,62 +1,159 @@
-<div class="grid gap-8">
-  <div class="relative overflow-x-auto shadow-md h-fit sm:rounded-lg">
-    <table class="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th scope="col" class="px-6 py-3">Nama</th>
-                <th scope="col" class="px-6 py-3">NIM</th>
-                <th scope="col" class="px-6 py-3">Semester</th>
-                <th scope="col" class="px-6 py-3">Status</th>
-                <th scope="col" class="px-6 py-3">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="bg-white border-b">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">Budi Santoso</th>
-                <td class="px-6 py-4">123456789</td>
-                <td class="px-6 py-4">5</td>
-                <td class="px-6 py-4">
-                  <div class="flex items-center">
-                    <div class="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>Active
-                  </div>
-                </td>
-                <td class="px-6 py-4 space-x-2 whitespace-nowrap">
-                  <button type="button" data-modal-target="edit-user-modal" data-modal-toggle="edit-user-modal" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    Detail
-                  </button>
-                </td>
-            </tr>
-            <tr class="bg-white border-b">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">Siti Aminah</th>
-                <td class="px-6 py-4">987654321</td>
-                <td class="px-6 py-4">3</td>
-                <td class="px-6 py-4">
-                  <div class="flex items-center">
-                    <div class="h-2.5 w-2.5 rounded-full bg-yellow-400 mr-2"></div>Inactive
-                  </div>
-                </td>
-                <td class="px-6 py-4 space-x-2 whitespace-nowrap">
-                  <button type="button" data-modal-target="edit-user-modal" data-modal-toggle="edit-user-modal" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    Detail
-                  </button>
-                </td>
-            </tr>
-            <tr class="bg-white border-b">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">Ahmad Yani</th>
-                <td class="px-6 py-4">112233445</td>
-                <td class="px-6 py-4">7</td>
-                <td class="px-6 py-4">
-                  <div class="flex items-center">
-                    <div class="h-2.5 w-2.5 rounded-full bg-red-400 mr-2"></div>Graduated
-                  </div>
-                </td>
-                <td class="px-6 py-4 space-x-2 whitespace-nowrap">
-                  <button type="button" data-modal-target="edit-user-modal" data-modal-toggle="edit-user-modal" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    Detail
-                  </button>
-                </td>
-            </tr>
-        </tbody>
+<div class="p-6">
+  <!-- Header -->
+  <div class="flex flex-wrap items-center justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">User Relations</h1>
+      <p class="text-sm text-gray-500">Manage your logbook relations with other users</p>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="mb-6 border-b border-gray-200">
+    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
+      <li class="me-2">
+        <button
+          (click)="switchTab('received')"
+          class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group"
+          [class]="activeTab === 'received' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300'">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+          </svg>
+          Received From Others
+          <span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-gray-200 text-gray-700">
+            {{ receivedFromOthers.length }}
+          </span>
+        </button>
+      </li>
+      <li class="me-2">
+        <button
+          (click)="switchTab('given')"
+          class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group"
+          [class]="activeTab === 'given' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300'">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+          </svg>
+          Given To Others
+          <span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-gray-200 text-gray-700">
+            {{ givenToOthers.length }}
+          </span>
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex items-center justify-center py-12">
+    <div class="text-center">
+      <div class="w-12 h-12 mx-auto border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+      <p class="mt-4 text-gray-500">Loading relations...</p>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div *ngIf="!loading" class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <!-- Empty State -->
+    <div *ngIf="getCurrentData().length === 0" class="py-12 text-center">
+      <svg class="w-16 h-16 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+      </svg>
+      <p class="mt-4 text-gray-500">No {{ activeTab === 'received' ? 'received' : 'given' }} relations found</p>
+      <p class="text-sm text-gray-400">
+        {{ activeTab === 'received' ? 'No one has shared logbook with you yet' : 'You haven\'t shared any logbook with others yet' }}
+      </p>
+    </div>
+
+    <!-- Table with data -->
+    <table *ngIf="getCurrentData().length > 0" class="w-full text-sm text-left text-gray-500">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+        <tr>
+          <th scope="col" class="px-6 py-3">Content</th>
+          <th scope="col" class="px-6 py-3">Shared By / To</th>
+          <th scope="col" class="px-6 py-3">Date Range</th>
+          <th scope="col" class="px-6 py-3">Status</th>
+          <th scope="col" class="px-6 py-3">Permission</th>
+          <th scope="col" class="px-6 py-3">Shared At</th>
+          <th scope="col" class="px-6 py-3 text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of getCurrentData()" class="bg-white border-b hover:bg-gray-50">
+          <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+            <div class="flex items-center gap-2">
+              <span>{{ item.content }}</span>
+              <span *ngIf="item.imageUrl" class="text-xs text-gray-400">🖼️</span>
+            </div>
+          </th>
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-2">
+              <span class="font-medium text-gray-700">{{ item.sharedBy }}</span>
+              <span class="text-xs text-gray-400">
+                {{ activeTab === 'received' ? '→ You' : '→ ' + item.sharedBy }}
+              </span>
+            </div>
+          </td>
+          <td class="px-6 py-4">
+            <div class="text-sm">
+              <div>{{ formatDate(item.dateStart) }}</div>
+              <div class="text-gray-400">→</div>
+              <div>{{ formatDate(item.dateEnd) }}</div>
+            </div>
+          </td>
+          <td class="px-6 py-4">
+            <span [class]="'inline-block px-2 py-0.5 text-xs font-medium rounded-full ' + getStatusColor(item.status)">
+              {{ item.status }}
+            </span>
+          </td>
+          <td class="px-6 py-4">
+            <span [class]="'inline-block px-2 py-0.5 text-xs font-medium rounded-full ' + getPermissionColor(item.permission)">
+              {{ item.permission }}
+            </span>
+          </td>
+          <td class="px-6 py-4 text-xs text-gray-500">
+            {{ formatDateTime(item.sharedAt) }}
+          </td>
+          <td class="px-6 py-4 text-center">
+            <a
+              [routerLink]="['/logbook', item.kodeLogbook]"
+              class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300">
+              <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+              Detail
+            </a>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
+
+  <!-- Summary -->
+  <!-- <div *ngIf="!loading" class="grid grid-cols-1 gap-4 mt-6 md:grid-cols-2">
+    <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-blue-100 rounded-lg">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm text-gray-500">Received From Others</p>
+          <p class="text-xl font-bold text-gray-900">{{ receivedFromOthers.length }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-purple-100 rounded-lg">
+          <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm text-gray-500">Given To Others</p>
+          <p class="text-xl font-bold text-gray-900">{{ givenToOthers.length }}</p>
+        </div>
+      </div>
+    </div>
+  </div> -->
 </div>

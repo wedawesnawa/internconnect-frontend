@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../../../core/services/api.service';
 import { UserByRole } from '../../logbook/models/logbook.model';
+import { RelationResponse } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,5 +29,10 @@ export class UserService {
    */
   getUserById(id: number): Observable<any> {
     return this.apiService.get(`User/${id}`, undefined, { withCredentials: true });
+  }
+
+  getRelations(): Observable<RelationResponse> {
+    console.log('=== GET RELATIONS ===');
+    return this.apiService.get<RelationResponse>('Dosen/relation', undefined, { withCredentials: true });
   }
 }
