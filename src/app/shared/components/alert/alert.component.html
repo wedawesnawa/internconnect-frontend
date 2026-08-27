@@ -1,35 +1,35 @@
-<!-- Toast Notification - Pojok Kanan Atas -->
 <div
   *ngIf="isVisible && message"
-  [class]="'fixed z-50 ' + positionClasses"
+  [class]="'fixed z-50 ' + positionClasses + ' alert-enter'"
   role="alert"
-  @slideIn>
+  (mouseenter)="pauseTimer()"
+  (mouseleave)="resumeTimer()">
 
   <div [class]="alertClasses">
-    <!-- Icon & Message -->
     <div class="flex items-start flex-1 mr-3">
       <span class="mr-2 text-lg">{{ icon }}</span>
-      <span class="font-medium">{{ message }}</span>
+      <div *ngIf="html" class="font-medium" [innerHTML]="message"></div>
+      <span *ngIf="!html" class="font-medium">{{ message }}</span>
     </div>
 
-    <!-- Close Button -->
     <button
       *ngIf="dismissible"
       (click)="onClose()"
       type="button"
-      class="flex-shrink-0 text-gray-400 transition-colors hover:text-gray-900 dark:hover:text-white">
+      class="flex-shrink-0 text-gray-400 transition-colors hover:text-gray-900">
       <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
         <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
       </svg>
     </button>
   </div>
 
-  <!-- Progress Bar -->
-  <div *ngIf="duration > 0" class="w-full h-1 overflow-hidden bg-gray-200 rounded-b-lg dark:bg-gray-700">
+  <!-- Progress bar dengan animasi -->
+  <div *ngIf="duration > 0" class="w-full h-1 overflow-hidden bg-gray-200 rounded-b-lg">
     <div
-      [class]="'h-full ' + progressColor + ' rounded-b-lg transition-all duration-1000 ease-linear'"
-      [style.width]="'100%'"
-      @progressBar>
+      class="h-full transition-all rounded-b-lg"
+      [class]="progressColor"
+      [style.width.%]="progressWidth"
+      [style.transition-duration]="'0.1s'">
     </div>
   </div>
 </div>

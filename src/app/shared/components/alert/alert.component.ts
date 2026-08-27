@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export type AlertType = 'success' | 'error' | 'warning' | 'info';
@@ -14,35 +14,106 @@ export class AlertComponent implements OnInit, OnDestroy {
   @Input() type: AlertType = 'info';
   @Input() message: string = '';
   @Input() dismissible: boolean = true;
-  @Input() duration: number = 5000; // Auto dismiss after 5 seconds
+  @Input() duration: number = 5000;
   @Input() position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' = 'top-right';
+  @Input() html: boolean = false;
   @Output() close = new EventEmitter<void>();
 
   private timeoutId: any;
+  private startTime: number = 0;
+  private elapsedTime: number = 0;
+  private isPaused: boolean = false;
+
   isVisible: boolean = true;
+  progressWidth: number = 100;
 
   ngOnInit(): void {
-    // Auto dismiss after duration
+    console.log('=== ALERT COMPONENT ===');
+    console.log('Message:', this.message);
+    console.log('HTML:', this.html);
+    console.log('Duration:', this.duration);
+
     if (this.duration > 0) {
-      this.timeoutId = setTimeout(() => {
-        this.dismiss();
-      }, this.duration);
+      this.startTime = Date.now();
+      this.startTimer();
     }
   }
 
   ngOnDestroy(): void {
+    this.clearTimer();
+  }
+
+  private startTimer(): void {
+    this.clearTimer();
+    this.startTime = Date.now() - this.elapsedTime;
+    this.isPaused = false;
+
+    // Update progress setiap 100ms
+    this.timeoutId = setInterval(() => {
+      if (!this.isPaused) {
+        const now = Date.now();
+        const elapsed = now - this.startTime;
+        const remaining = Math.max(0, this.duration - elapsed);
+        this.progressWidth = (remaining / this.duration) * 100;
+
+        if (remaining <= 0) {
+          this.dismiss();
+        }
+      }
+    }, 100);
+  }
+
+  private clearTimer(): void {
     if (this.timeoutId) {
-      clearTimeout(this.timeoutId);
+      clearInterval(this.timeoutId);
+      this.timeoutId = null;
     }
   }
 
+  pauseTimer(): void {
+    if (this.duration > 0 && !this.isPaused) {
+      this.isPaused = true;
+      this.elapsedTime = Date.now() - this.startTime;
+      this.clearTimer();
+    }
+  }
+
+  resumeTimer(): void {
+    if (this.duration > 0 && this.isPaused && this.isVisible) {
+      this.isPaused = false;
+      this.startTime = Date.now() - this.elapsedTime;
+      this.startTimer();
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.isVisible) {
+      this.dismiss();
+    }
+  }
+
+  dismiss(): void {
+    this.isVisible = false;
+    this.clearTimer();
+
+    // Tambahkan class exit sebelum emit
+    setTimeout(() => {
+      this.close.emit();
+    }, 400);
+  }
+
+  onClose(): void {
+    this.dismiss();
+  }
+
   get alertClasses(): string {
-    const baseClasses = 'p-4 mb-3 text-sm rounded-lg shadow-lg flex items-start justify-between min-w-[300px] max-w-md';
+    const baseClasses = 'p-4 mb-0 text-sm rounded-lg shadow-lg flex items-start justify-between min-w-[300px] max-w-md';
     const typeClasses = {
-      success: 'text-green-800 bg-green-50 dark:bg-green-900/80 dark:text-green-300 border border-green-200 dark:border-green-700',
-      error: 'text-red-800 bg-red-50 dark:bg-red-900/80 dark:text-red-300 border border-red-200 dark:border-red-700',
-      warning: 'text-yellow-800 bg-yellow-50 dark:bg-yellow-900/80 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700',
-      info: 'text-blue-800 bg-blue-50 dark:bg-blue-900/80 dark:text-blue-300 border border-blue-200 dark:border-blue-700'
+      success: 'text-green-800 bg-green-50 border border-green-200',
+      error: 'text-red-800 bg-red-50 border border-red-200',
+      warning: 'text-yellow-800 bg-yellow-50 border border-yellow-200',
+      info: 'text-blue-800 bg-blue-50 border border-blue-200'
     };
     return `${baseClasses} ${typeClasses[this.type]}`;
   }
@@ -75,14 +146,5 @@ export class AlertComponent implements OnInit, OnDestroy {
       info: 'bg-blue-500'
     };
     return colors[this.type];
-  }
-
-  dismiss(): void {
-    this.isVisible = false;
-    this.close.emit();
-  }
-
-  onClose(): void {
-    this.dismiss();
   }
 }

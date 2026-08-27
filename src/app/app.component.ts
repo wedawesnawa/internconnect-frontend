@@ -4,6 +4,9 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AlertContainerComponent } from './shared/components/alert/alert-container.component';
+import { ProfileCheckService } from './feature/profile/services/profile-check.service';
+import { AuthService } from './feature/auth/services/auth.service';
+
 
 @Component({
   selector: 'app-root',
@@ -17,7 +20,12 @@ export class AppComponent implements OnInit {
   title = 'web-app';
   isLoading = false;
 
-  constructor(private themeService: ThemeService, private router: Router) {}
+  constructor(
+    private themeService: ThemeService,
+    private router: Router,
+    private profileCheckService: ProfileCheckService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     initFlowbite();
@@ -34,7 +42,24 @@ export class AppComponent implements OnInit {
         event instanceof NavigationError
       ) {
         this.isLoading = false;
+        // Check profile setelah navigasi selesai
+        if (this.authService.isAuthenticated()) {
+          // Jangan cek di halaman profile
+          const currentUrl = this.router.url;
+          if (!currentUrl.includes('/profile')) {
+            this.profileCheckService.resetSessionFlag();
+            this.profileCheckService.loadAndCheckProfile();
+          }
+        }
       }
     });
+    if (this.authService.isAuthenticated()) {
+      setTimeout(() => {
+        const currentUrl = this.router.url;
+        if (!currentUrl.includes('/profile')) {
+          this.profileCheckService.loadAndCheckProfile();
+        }
+      }, 1000);
+    }
   }
 }

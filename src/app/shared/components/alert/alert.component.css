@@ -22,40 +22,51 @@
   }
 }
 
-/* Animasi progress bar */
-@keyframes progressShrink {
-  from {
-    width: 100%;
+/* Animasi bounce untuk attention */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(0);
   }
-  to {
-    width: 0%;
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
   }
 }
 
-/* Apply animations */
-[role="alert"] {
+/* Apply animations dengan class */
+.alert-enter {
   animation: slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
 }
 
-[role="alert"].closing {
+.alert-exit {
   animation: slideOutRight 0.4s ease-in forwards;
 }
 
-/* Progress bar animation */
-[class*="h-full"] {
-  animation: progressShrink linear forwards;
-  animation-duration: 5s; /* Will be overridden by inline style */
+.alert-bounce {
+  animation: bounce 0.5s ease-in-out;
 }
 
-/* Shadow and hover effects */
+/* Shadow dan efek hover */
 [class*="shadow-lg"] {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
 [class*="shadow-lg"]:hover {
   box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
-  transform: translateY(-2px);
-  transition: all 0.3s ease;
+  transform: translateY(-2px) scale(1.01);
+}
+
+/* Style untuk link di dalam alert */
+[role="alert"] a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+[role="alert"] a:hover {
+  text-decoration: underline;
 }
 
 /* Responsive */
@@ -70,4 +81,19 @@
     min-width: unset !important;
     width: 100% !important;
   }
+}
+
+/* Progress bar animation */
+@keyframes progressShrink {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.progress-bar {
+  animation: progressShrink linear forwards;
+  animation-duration: var(--duration, 5s);
 }
