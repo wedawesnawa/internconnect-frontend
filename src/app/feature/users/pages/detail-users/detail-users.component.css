@@ -1,0 +1,38 @@
+/* Animasi loading */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Truncate text */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.max-w-xs {
+  max-width: 20rem;
+}
+
+/* Hover effect untuk row */
+tbody tr:hover {
+  background-color: #f9fafb;
+  transition: background-color 0.2s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .overflow-x-auto {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 700px;
+  }
+}

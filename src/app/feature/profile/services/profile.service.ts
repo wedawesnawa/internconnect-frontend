@@ -18,6 +18,18 @@ export class ProfileService {
     return this.apiService.get<Profile>('UserDetail', undefined, { withCredentials: true });
   }
 
+  getProfileByUsername(username: string): Observable<Profile> {
+    console.log('=== GET PROFILE BY USERNAME ===');
+    console.log('Username:', username);
+    console.log('Endpoint:', `UserDetail/${username}`);
+
+    return this.apiService.get<Profile>(
+      `UserDetail/${username}`,
+      undefined,
+      { withCredentials: true }
+    );
+  }
+
   /**
    * Create new profile
    * POST /UserDetail

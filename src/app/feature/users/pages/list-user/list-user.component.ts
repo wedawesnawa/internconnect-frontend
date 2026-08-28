@@ -4,29 +4,34 @@ import { RouterModule } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { RelationItem, RelationResponse } from '../../models/user.model';
 import { AlertService } from '../../../../shared/services/alert.service';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-list-user',
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './list-user.component.html',
-  styleUrl: './list-user.component.css'
+  styleUrls: ['./list-user.component.css']
 })
 export class ListUserComponent implements OnInit {
   // Data relasi
   receivedFromOthers: RelationItem[] = [];
   givenToOthers: RelationItem[] = [];
   loading: boolean = false;
+  currentUser: string = '';
 
   // Tab aktif
   activeTab: 'received' | 'given' = 'received';
 
   constructor(
     private relationService: UserService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.currentUser = this.authService.getCurrentUser()?.username || '';
+    console.log('Current user:', this.currentUser);
     this.loadRelations();
   }
 
@@ -34,9 +39,26 @@ export class ListUserComponent implements OnInit {
     this.loading = true;
     this.relationService.getRelations().subscribe({
       next: (response: RelationResponse) => {
-        console.log('Relations loaded:', response);
+        console.log('=== RELATIONS RESPONSE ===');
+        console.log('Full response:', response);
+
         this.receivedFromOthers = response.receivedFromOthers || [];
         this.givenToOthers = response.givenToOthers || [];
+
+        console.log('Received from others:', this.receivedFromOthers);
+        console.log('Given to others:', this.givenToOthers);
+
+        // Log detail setiap item di givenToOthers
+        this.givenToOthers.forEach((item, index) => {
+          console.log(`Given ${index + 1}:`, {
+            content: item.content,
+            sharedBy: item.sharedBy,
+            kodeLogbook: item.kodeLogbook,
+            allKeys: Object.keys(item),
+            fullItem: item
+          });
+        });
+
         this.loading = false;
       },
       error: (error: any) => {
@@ -49,6 +71,72 @@ export class ListUserComponent implements OnInit {
 
   switchTab(tab: 'received' | 'given'): void {
     this.activeTab = tab;
+    console.log('Tab switched to:', tab);
+    console.log('Current data:', this.getCurrentData());
+  }
+
+  /**
+   * Mendapatkan username dari item relation
+   * Untuk received: sharedBy adalah orang yang share
+   * Untuk given: coba cari dari berbagai field
+   */
+  getUsernameFromItem(item: RelationItem): string {
+    console.log('=== getUsernameFromItem ===');
+    console.log('Item:', item);
+    console.log('Active tab:', this.activeTab);
+
+    // List field yang mungkin berisi username
+    const possibleFields = ['sharedBy', 'sharedWith', 'username', 'to', 'recipient'];
+
+    // Coba cari di semua field yang mungkin
+    for (const field of possibleFields) {
+      const value = (item as any)[field];
+      if (value && typeof value === 'string' && value !== 'undefined' && value !== 'null') {
+        console.log(`Found username in field "${field}":`, value);
+        return value;
+      }
+    }
+
+    // Jika tidak ditemukan, fallback
+    if (this.activeTab === 'received') {
+      console.log('No username found, using Unknown');
+      return 'Unknown';
+    } else {
+      console.log('No username found for given, using Unknown');
+      return 'Unknown';
+    }
+  }
+
+  /**
+   * Mendapatkan nama orang yang berinteraksi
+   */
+  getDisplayName(item: RelationItem): string {
+    const username = this.getUsernameFromItem(item);
+    console.log('Display name:', username);
+    return username;
+  }
+
+  /**
+   * Mendapatkan label untuk interaksi
+   */
+  getInteractionLabel(item: RelationItem): string {
+    const name = this.getDisplayName(item);
+    if (this.activeTab === 'received') {
+      return `→ You (from ${name})`;
+    } else {
+      return `← You (to ${name})`;
+    }
+  }
+
+  /**
+   * Cek apakah username valid
+   */
+  isValidUsername(username: string): boolean {
+    return !!(username &&
+      username !== 'undefined' &&
+      username !== 'null' &&
+      username !== 'Unknown' &&
+      username.trim() !== '');
   }
 
   getStatusColor(status: string): string {
@@ -105,5 +193,10 @@ export class ListUserComponent implements OnInit {
       return this.receivedFromOthers;
     }
     return this.givenToOthers;
+  }
+
+  // Helper untuk debug
+  hasGivenData(): boolean {
+    return this.givenToOthers.length > 0;
   }
 }

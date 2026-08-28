@@ -7,6 +7,7 @@ export interface RelationItem {
   deskripsi: string;
   imageUrl: string | null;
   sharedBy: string;
+  sharedTo?: string;   
   sharedAt: string;
   permission: string;
 }

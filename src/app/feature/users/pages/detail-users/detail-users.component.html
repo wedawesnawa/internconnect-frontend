@@ -1,82 +1,233 @@
-<div class="grid grid-cols-1 xl:grid-cols-3 xl:gap-4">
-  <!-- Right Content -->
-  <div class="col-span-full xl:col-auto">
-      <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
-        <h3 class="mb-4 text-xl font-semibold dark:text-white">General information</h3>
-        <form action="#" class="space-y-6">
-          <div class="col-span-6 mb-3 sm:col-span-3">
-            <span class="block text-sm font-medium text-gray-900 dark:text-gray-400">Nama</span>
-            <h4 class="text-base font-semibold text-gray-900 dark:text-white">John Doe</h4>
-          </div>
-          <div class="col-span-6 mb-3 sm:col-span-3">
-            <span class="block text-sm font-medium text-gray-900 dark:text-gray-400">NIM</span>
-            <h4 class="text-base font-semibold text-gray-900 dark:text-white">12345678</h4>
-          </div>
-          <div class="col-span-6 mb-3 sm:col-span-3">
-            <span class="block text-sm font-medium text-gray-900 dark:text-gray-400">Nama Pembimbing Lapangan</span>
-            <h4 class="text-base font-semibold text-gray-900 dark:text-white">Dr. Smith</h4>
-          </div>
-          <div class="col-span-6 mb-3 sm:col-span-3">
-            <span class="block text-sm font-medium text-gray-900 dark:text-gray-400">Nama Institusi</span>
-            <h4 class="text-base font-semibold text-gray-900 dark:text-white">ABC Corporation</h4>
-          </div>
-          <div class="col-span-6 mb-3 sm:col-span-3">
-            <span class="block text-sm font-medium text-gray-900 dark:text-gray-400">Semester</span>
-            <h4 class="text-base font-semibold text-gray-900 dark:text-white">6</h4>
-          </div>
-        </form>
-      </div>
-      <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
-          <h3 class="mb-4 text-xl font-semibold dark:text-white">Progress</h3>
-          <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
-            <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style="width: 45%"> 45%</div>
-          </div>
-      </div>
+<div class="p-6">
+  <!-- Header -->
+  <div class="flex flex-wrap items-center justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">User Detail</h1>
+      <p class="text-sm text-gray-500">View user information and their logbook activities</p>
+    </div>
   </div>
-  <div class="col-span-2">
-    <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
-      <h3 class="mb-4 text-xl font-semibold dark:text-white">Logbook</h3>
-      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table class="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
-          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" class="p-4">
-                <div class="flex items-center">
-                  <input id="checkbox-all-logbook" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                  <label for="checkbox-all-logbook" class="sr-only">checkbox</label>
-                </div>
-              </th>
-              <th scope="col" class="px-6 py-3">Kode LB</th>
-              <th scope="col" class="px-6 py-3">Aktivitas</th>
-              <th scope="col" class="px-6 py-3">Tanggal</th>
-              <th scope="col" class="px-6 py-3">Keterangan</th>
-              <th scope="col" class="px-6 py-3">Status</th>
-              <th scope="col" class="px-6 py-3">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td class="w-4 p-4">
-                <div class="flex items-center">
-                  <input id="checkbox-log-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                  <label for="checkbox-log-1" class="sr-only">checkbox</label>
-                </div>
-              </td>
-              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">LB001</th>
-              <td class="px-6 py-4">Observasi lapangan</td>
-              <td class="px-6 py-4">12-09-2024</td>
-              <td class="px-6 py-4">Meninjau area proyek</td>
-              <td class="px-6 py-4">Selesai</td>
-              <td class="flex items-center px-6 py-4">
-                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">File</a>
-                <a href="#" class="font-medium text-green-600 dark:text-green-500 hover:underline ms-3">Accept</a>
-              </td>
-            </tr>
-            <!-- Repeat rows as necessary -->
-          </tbody>
-        </table>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex items-center justify-center py-12">
+    <div class="text-center">
+      <div class="w-12 h-12 mx-auto border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      <p class="mt-4 text-gray-500">Loading user data...</p>
+    </div>
+  </div>
+
+  <!-- User Detail -->
+  <div *ngIf="!loading && userDetail" class="grid grid-cols-1 gap-4 xl:grid-cols-3 xl:gap-4">
+    <!-- Left Column - User Info -->
+    <div class="col-span-full xl:col-auto">
+      <!-- General Information -->
+      <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6">
+        <h3 class="mb-4 text-xl font-semibold text-gray-900">General Information</h3>
+
+        <div class="space-y-4">
+          <!-- Profile Picture -->
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-white text-2xl font-bold">
+              {{ userDetail.nama ? userDetail.nama.charAt(0) : userDetail.username ? userDetail.username.charAt(0) : 'U' }}
+            </div>
+            <div>
+              <h4 class="text-lg font-semibold text-gray-900">{{ userDetail.nama || userDetail.username }}</h4>
+              <!-- Perbaiki: Gunakan username tanpa @ -->
+              <p class="text-sm text-gray-500">{{ userDetail.username ? 'Username: ' + userDetail.username : '' }}</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <span class="block text-sm font-medium text-gray-500">Full Name</span>
+              <h4 class="text-base font-semibold text-gray-900">{{ userDetail.nama || '-' }}</h4>
+            </div>
+            <div>
+              <span class="block text-sm font-medium text-gray-500">Username</span>
+              <h4 class="text-base font-semibold text-gray-900">{{ userDetail.username || '-' }}</h4>
+            </div>
+            <div>
+              <span class="block text-sm font-medium text-gray-500">Phone</span>
+              <h4 class="text-base font-semibold text-gray-900">{{ userDetail.telp || '-' }}</h4>
+            </div>
+            <div>
+              <span class="block text-sm font-medium text-gray-500">Institution</span>
+              <h4 class="text-base font-semibold text-gray-900">{{ userDetail.instansi || '-' }}</h4>
+            </div>
+            <div class="sm:col-span-2">
+              <span class="block text-sm font-medium text-gray-500">Address</span>
+              <h4 class="text-base font-semibold text-gray-900">{{ userDetail.alamat || '-' }}</h4>
+            </div>
+            <div class="sm:col-span-2">
+              <span class="block text-sm font-medium text-gray-500">Institution Address</span>
+              <h4 class="text-base font-semibold text-gray-900">{{ userDetail.alamatInstansi || '-' }}</h4>
+            </div>
+            <div class="sm:col-span-2">
+              <span class="block text-sm font-medium text-gray-500">Bio</span>
+              <p class="text-base text-gray-900">{{ userDetail.bio || 'No bio available' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6">
+        <h3 class="mb-4 text-xl font-semibold text-gray-900">Progress</h3>
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-gray-500">Completion</span>
+              <span class="font-medium text-gray-700">
+                {{ getCompletionPercentage() }}%
+              </span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+              <div
+                class="bg-blue-600 h-2.5 rounded-full transition-all duration-500"
+                [style.width.%]="getCompletionPercentage()">
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-500">Total Activities: <span class="font-medium text-gray-700">{{ detailLogbooks.length }}</span></span>
+            <span class="text-gray-500">Verified: <span class="font-medium text-green-700">{{ getVerifiedCount() }}</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column - Logbook -->
+    <div class="col-span-2">
+      <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-semibold text-gray-900">Logbook Activities</h3>
+          <span class="px-2 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full">
+            {{ detailLogbooks.length }} items
+          </span>
+        </div>
+
+        <!-- Filter -->
+        <div class="flex flex-wrap gap-3 mb-4">
+          <div class="flex-1 min-w-[200px]">
+            <input
+              type="text"
+              [(ngModel)]="searchTerm"
+              placeholder="Search activities..."
+              class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div class="w-40">
+            <select
+              [(ngModel)]="selectedStatus"
+              class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">All Status</option>
+              <option *ngFor="let status of getStatusOptions()" [value]="status">
+                {{ status }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="loadingLogbooks" class="py-4 text-center">
+          <div class="inline-block w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <p class="mt-2 text-sm text-gray-500">Loading activities...</p>
+        </div>
+
+        <!-- Table -->
+        <div *ngIf="!loadingLogbooks" class="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <!-- Empty State -->
+          <div *ngIf="detailLogbooks.length === 0" class="py-8 text-center">
+            <svg class="w-12 h-12 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <p class="mt-2 text-gray-500">No activities found</p>
+            <p class="text-sm text-gray-400">This user hasn't created any logbook entries yet</p>
+          </div>
+
+          <!-- Table with data -->
+          <table *ngIf="detailLogbooks.length > 0" class="w-full text-sm text-left text-gray-500">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+              <tr>
+                <th scope="col" class="px-4 py-3">Date</th>
+                <th scope="col" class="px-4 py-3">Time</th>
+                <th scope="col" class="px-4 py-3">Description</th>
+                <th scope="col" class="px-4 py-3">Obstacles</th>
+                <th scope="col" class="px-4 py-3">Attendance</th>
+                <th scope="col" class="px-4 py-3">Status</th>
+                <th scope="col" class="px-4 py-3 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of detailLogbooks" class="bg-white border-b hover:bg-gray-50">
+                <td class="px-4 py-3 text-gray-900 whitespace-nowrap">
+                  {{ formatDate(item.date) }}
+                </td>
+                <td class="px-4 py-3 text-gray-500 whitespace-nowrap">
+                  {{ formatTime(item.timeStart) }} - {{ formatTime(item.timeEnd) }}
+                </td>
+                <td class="px-4 py-3 text-gray-900 max-w-xs">
+                  <div class="truncate" title="{{ item.deskripsi }}">
+                    {{ item.deskripsi || '-' }}
+                  </div>
+                </td>
+                <td class="px-4 py-3 text-gray-500 max-w-xs">
+                  <div class="truncate" title="{{ item.kendala }}">
+                    {{ item.kendala || '-' }}
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <span [class]="'inline-block px-2 py-0.5 text-xs font-medium rounded-full ' + getAttendStatusColor(item.statusAttend)">
+                    {{ item.statusAttend || '-' }}
+                  </span>
+                </td>
+                <td class="px-4 py-3">
+                  <span [class]="'inline-block px-2 py-0.5 text-xs font-medium rounded-full ' + getStatusColor(item.status)">
+                    {{ item.status || '-' }}
+                  </span>
+                </td>
+                <td class="px-4 py-3 text-center">
+                  <button
+                    (click)="verifyStatus(item)"
+                    [disabled]="item.status === 'Verified' || item.statusAttend === 'Verified'"
+                    class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg transition-colors"
+                    [class]="item.status === 'Verified' || item.statusAttend === 'Verified' ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300'">
+                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    {{ item.status === 'Verified' || item.statusAttend === 'Verified' ? 'Verified' : 'Verify' }}
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Summary Footer -->
+        <div class="flex flex-wrap items-center justify-between pt-4 mt-4 border-t border-gray-200">
+          <div class="flex items-center gap-4 text-sm text-gray-500">
+            <span>Total: <span class="font-medium text-gray-700">{{ detailLogbooks.length }}</span></span>
+            <span>Verified: <span class="font-medium text-green-700">{{ getVerifiedCount() }}</span></span>
+            <span>Pending: <span class="font-medium text-yellow-700">{{ detailLogbooks.length - getVerifiedCount() }}</span></span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
+  <!-- Error State -->
+  <div *ngIf="!loading && !userDetail" class="py-12 text-center">
+    <svg class="w-16 h-16 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+    </svg>
+    <p class="mt-4 text-gray-500">User not found</p>
+    <button
+      (click)="goBack()"
+      class="mt-4 inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800">
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+      </svg>
+      Back to Users
+    </button>
+  </div>
+</div>

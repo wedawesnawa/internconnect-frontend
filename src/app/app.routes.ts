@@ -84,10 +84,10 @@ export const routes: Routes = [
         data: { title: 'Users' }
       },
       {
-        path: 'list-user/:id',
+        path: 'detail-users/:kodeLogbook',
         loadComponent: () => import('./feature/users/pages/detail-users/detail-users.component')
           .then(m => m.DetailUsersComponent),
-        data: { title: 'User Detail' }
+        canActivate: [AuthGuard]
       },
       {
         path: '',
