@@ -9,6 +9,7 @@ import { Profile } from '../../../profile/models/profile.model';
 import { ProfileService } from '../../../profile/services/profile.service';
 import { UserService } from '../../services/user.service';
 import { RelationItem } from '../../models/user.model';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-detail-users',
@@ -32,16 +33,47 @@ export class DetailUsersComponent implements OnInit {
   searchTerm: string = '';
   selectedStatus: string = '';
 
+  // Verifikasi
+  isVerifying: boolean = false;
+  currentUserRole: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private logbookService: LogbookService,
     private alertService: AlertService,
     private profileService: ProfileService,
-    private relationService: UserService
+    private relationService: UserService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    const user = this.authService.getCurrentUser();
+    console.log('User from getCurrentUser():', user);
+    console.log('User role:', user?.role);
+    console.log('User username:', user?.username);
+    console.log('Full user:', JSON.stringify(user, null, 2));
+
+    // Ambil role dari localStorage langsung
+    const userStr = localStorage.getItem('user');
+    let userRole = 'User';
+    if (userStr) {
+      try {
+        const parsedUser = JSON.parse(userStr);
+        userRole = parsedUser.role || 'User';
+        console.log('Role from localStorage:', userRole);
+      } catch (e) {
+        console.error('Error parsing user:', e);
+      }
+    }
+
+    // Set role dari localStorage
+    this.currentUserRole = userRole;
+    console.log('Current user role (set):', this.currentUserRole);
+
+    // Coba dari AuthService juga
+    this.currentUserRole = this.authService.getUserRole() || userRole;
+    console.log('Current user role (from AuthService):', this.currentUserRole);
     // Ambil parameter dari route
     this.route.params.subscribe(params => {
       this.kodeLogbook = params['kodeLogbook'] || params['id'] || '';
@@ -237,14 +269,20 @@ export class DetailUsersComponent implements OnInit {
   getCompletionPercentage(): number {
     if (this.detailLogbooks.length === 0) return 0;
     const completed = this.detailLogbooks.filter(item =>
-      item.status === 'Completed' || item.status === 'Verified'
+      item.status === 'Completed' || item.status === 'Approved'
     ).length;
     return Math.round((completed / this.detailLogbooks.length) * 100);
   }
 
+  canVerify(): boolean {
+    const allowedRoles = ['Supervisor', 'Mentor', 'Admin'];
+    const can = allowedRoles.includes(this.currentUserRole);
+    return can;
+  }
+
   getVerifiedCount(): number {
     return this.detailLogbooks.filter(item =>
-      item.status === 'Verified' || item.statusAttend === 'Verified'
+      item.status === 'Approved' || item.statusAttend === 'Approved'
     ).length;
   }
 
@@ -309,13 +347,54 @@ export class DetailUsersComponent implements OnInit {
   }
 
   verifyStatus(item: DetailLogbookResponse): void {
-    if (item.status === 'Verified' || item.statusAttend === 'Verified') {
+    // Cek apakah sudah diverifikasi
+    if (item.status === 'Approved' || item.statusAttend === 'Approved') {
       this.alertService.info('This item is already verified');
       return;
     }
 
-    console.log('Verifying status for:', item);
-    this.alertService.info(`Verifying activity on ${this.formatDate(item.date)}`);
-    // TODO: Implement API call for verification
+    // Cek izin
+    if (!this.canVerify()) {
+      this.alertService.warning('Only Supervisor and Mentor can verify logbook entries');
+      return;
+    }
+
+    // Konfirmasi
+    if (!confirm(`Are you sure you want to verify this activity on ${this.formatDate(item.date)}?`)) {
+      return;
+    }
+
+    this.isVerifying = true;
+    console.log('Verifying status for item:', item);
+
+    this.logbookService.verifyDetailLogbook(item.id).subscribe({
+      next: (response: any) => {
+        console.log('Verification response:', response);
+        this.alertService.success(`Activity on ${this.formatDate(item.date)} verified successfully!`);
+        this.isVerifying = false;
+        // Refresh data
+        this.loadDetailLogbooks();
+      },
+      error: (error: any) => {
+        console.error('Error verifying logbook:', error);
+        let errorMessage = 'Failed to verify activity';
+        if (error.error?.message) {
+          errorMessage = error.error.message;
+        } else if (error.status === 403) {
+          errorMessage = 'You do not have permission to verify this activity';
+        }
+        this.alertService.error(errorMessage);
+        this.isVerifying = false;
+      }
+    });
+  }
+  getRoleBadgeClass(role: string): string {
+    const classes: { [key: string]: string } = {
+      'Supervisor': 'bg-purple-100 text-purple-800',
+      'Mentor': 'bg-blue-100 text-blue-800',
+      'Admin': 'bg-red-100 text-red-800',
+      'User': 'bg-gray-100 text-gray-800'
+    };
+    return classes[role] || 'bg-gray-100 text-gray-800';
   }
 }

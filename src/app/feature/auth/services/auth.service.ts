@@ -186,6 +186,14 @@ export class AuthService {
     return null;
   }
 
+  getUserRole(): string {
+    const user = this.getCurrentUser();
+    console.log('=== GET USER ROLE ===');
+    console.log('User from localStorage:', user);
+    console.log('Role:', user?.role);
+    return user?.role || 'User';
+  }
+
   isAuthenticated(): boolean {
     return !!this.getUser();
   }

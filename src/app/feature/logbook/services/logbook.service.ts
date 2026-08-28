@@ -185,4 +185,18 @@ export class LogbookService {
       { withCredentials: true }
     );
   }
+
+  // Verif
+  verifyDetailLogbook(id: number): Observable<any> {
+    console.log('=== VERIFY DETAIL LOGBOOK ===');
+    console.log('ID:', id);
+    console.log('Endpoint:', `DetailLogbook/${id}/verif`);
+    console.log('Body:', { status: 'Approved' });
+
+    return this.apiService.put(
+      `DetailLogbook/${id}/verif`,
+      { status: 'Approved' },
+      { withCredentials: true }
+    );
+  }
 }
