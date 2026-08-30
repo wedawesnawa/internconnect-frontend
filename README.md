@@ -7,7 +7,11 @@ Frontend Internconnect dibangun menggunakan Angular dan berkomunikasi dengan bac
 <table>
   <tr>
     <td><img src="public/assets/images/internconnect(3).gif" width="100%"/></td>
+  </tr>
+  <tr>
     <td><img src="public/assets/images/internconnect(1).gif" width="100%"/></td>
+  </tr>
+  <tr>
     <td><img src="public/assets/images/internconnect(2).gif" width="100%"/></td>
   </tr>
 </table>
