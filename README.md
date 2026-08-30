@@ -1,4 +1,9 @@
 # Internconnect : Internship Management Website
+<tr>
+  <td><img src="public/assets/images/internconnect(1).gif" width="100%"/></td>
+  <td><img src="public/assets/images/internconnect(2).gif" width="100%"/></td>
+  <td><img src="public/assets/images/internconnect(3).gif" width="100%"/></td>
+</tr>
 
 ## About
 Internconnect is a web application designed to digitalize the internship (Praktik Kerja Lapangan) monitoring process for undergraduate Informatics students.
@@ -50,53 +55,72 @@ Authentication
   </tr>
 
   <tr>
-    <td colspan="2" align="center">
-      <img src="https://drive.google.com/uc?id=1z0yg7Y_CzA54_k1dKk1WiREmo9f0STgi" width="700">
+    <td>
+      <img src="https://drive.google.com/uc?id=1JF6LUU2fvrLtGD-sufybuuYe9t-w5KxR" width="700">
+    </td>
+    <td>
+      <img src="https://drive.google.com/uc?id=1np4UW4w7iKYBkmvfj5TlBvQbdpenmQjX" width="700">
     </td>
   </tr>
 
   <tr>
     <td>
-      <img src="https://drive.google.com/uc?id=1jXP5gS7KPhb63_NrHiYGGX7mxp8sn3CR" width="100%">
+      <img src="https://drive.google.com/uc?id=1WI8KmNT8nSj6NFm_SkDHjIQTtdlp3ey1" width="100%">
     </td>
     <td>
-      <img src="https://drive.google.com/uc?id=1vbStOLjhhaUoFfukO9wD7ovGM-OIbfyK" width="100%">
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <img src="https://drive.google.com/uc?id=1WJN7l8O12R1VK0EvVVkDdyiGFXoL7KQv" width="100%">
-    </td>
-    <td>
-      <img src="https://drive.google.com/uc?id=1jnWauNH2zLHNWBOP0HDSOsYW3UHv3oLN" width="100%">
+      <img src="https://drive.google.com/uc?id=1T9BSW9-mBeYybhD9Jxv23SLNagyutNIw" width="100%">
     </td>
   </tr>
 
   <tr>
     <td>
-      <img src="https://drive.google.com/uc?id=1l0AgkSP3We1UgWSgh5-xtE1ZjcoYp4Qx" width="100%">
+      <img src="https://drive.google.com/uc?id=1cc7miziT53HNeU7YijOLGKcjsxD7AJb-" width="100%">
     </td>
     <td>
-      <img src="https://drive.google.com/uc?id=1b5qDVK3qpS1fVRjXHr3C4xdv58uZ_wi7" width="100%">
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <img src="https://drive.google.com/uc?id=11dxfG6KGF8ZlS7dNWgWEvBa8D19MecuY" width="100%">
-    </td>
-    <td>
-      <img src="https://drive.google.com/uc?id=1pOvzCCS700Jr6z67tsMb-hnKP8H-k5Lz" width="100%">
+      <img src="https://drive.google.com/uc?id=1I5K0gMKhI1hHLUs-UF0P-dbgBWOZIkZD" width="100%">
     </td>
   </tr>
 
   <tr>
     <td>
-      <img src="https://drive.google.com/uc?id=1yTQjk6sCQHSsE-H9RNLdixLyKKYqIjtq" width="100%">
+      <img src="https://drive.google.com/uc?id=1IN8M6XO1wIDPCRh-g1Hm2dfJhXhRmtz9" width="100%">
     </td>
     <td>
-      <img src="https://drive.google.com/uc?id=16D31uJZgDi5cWUqUXtr1Xpp7dZhc_HEK" width="100%">
+      <img src="https://drive.google.com/uc?id=1Icu2OO6O7RqDQd5XHbTuLz0tAdrKwb9w" width="100%">
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <img src="https://drive.google.com/uc?id=1sTKVtJk5pxlQsm7n9AUT-y60Va8-7CTV" width="100%">
+    </td>
+    <td>
+      <img src="https://drive.google.com/uc?id=1wxKr4thZNvVk43Z2lU6LVqui6mfMIiDb" width="100%">
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <img src="https://drive.google.com/uc?id=1FYoqOKzoxW8ntpS5U86gPFID4P7fc2c5" width="100%">
+    </td>
+    <td>
+      <img src="https://drive.google.com/uc?id=1j5FmzHmsELqYBceg3ZcUA3fe_6hHCA2V" width="100%">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="https://drive.google.com/uc?id=1FFO0PBG5uRvKEBAk2iSStjW-02YVEP2a" width="100%">
+    </td>
+    <td>
+      <img src="https://drive.google.com/uc?id=1Rk5jrL51S6ZfKxQLanvNjODpPS7IKDE1" width="100%">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="https://drive.google.com/uc?id=1hd_Gvi5w7bULHjdGTw0dt6PLJYpVEEpa" width="100%">
+    </td>
+    <td>
+      <img src="https://drive.google.com/uc?id=11UpLecfeuf-k9CIjrm7TXymQHCdHvuZK" width="100%">
     </td>
   </tr>
 </table>
