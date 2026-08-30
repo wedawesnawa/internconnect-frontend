@@ -23,6 +23,8 @@ export class DetailUsersComponent implements OnInit {
   username: string = '';
   userDetail: Profile | null = null;
   loading: boolean = false;
+  profilePictureUrl: string | null = null;
+  isLoadingProfile: boolean = false;
 
   // Logbook data
   detailLogbooks: DetailLogbookResponse[] = [];
@@ -36,6 +38,11 @@ export class DetailUsersComponent implements OnInit {
   // Verifikasi
   isVerifying: boolean = false;
   currentUserRole: string = '';
+
+  // Download
+  isDownloading: boolean = false;
+  fileUrl: string | null = null;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -74,6 +81,7 @@ export class DetailUsersComponent implements OnInit {
     // Coba dari AuthService juga
     this.currentUserRole = this.authService.getUserRole() || userRole;
     console.log('Current user role (from AuthService):', this.currentUserRole);
+
     // Ambil parameter dari route
     this.route.params.subscribe(params => {
       this.kodeLogbook = params['kodeLogbook'] || params['id'] || '';
@@ -147,6 +155,8 @@ export class DetailUsersComponent implements OnInit {
     });
   }
 
+  // detail-users.component.ts - Update method loadUserProfileByUsername
+
   loadUserProfileByUsername(username: string): void {
     if (!username || username === 'undefined' || username === 'null' || username === '') {
       console.log('Invalid username, skipping profile load');
@@ -171,32 +181,32 @@ export class DetailUsersComponent implements OnInit {
 
     this.profileService.getProfileByUsername(username).subscribe({
       next: (profile: Profile) => {
-        console.log('User profile loaded:', profile);
+        console.log('=== FULL PROFILE RESPONSE ===');
+        console.log('Profile object:', profile);
+        console.log('ProfilePictureUrl:', profile.profileUrl);
+        console.log('ProfileUrl:', profile.profileUrl);
+        console.log('FileUrl:', profile.fileUrl);
+
         this.userDetail = profile;
+
+        // SET full URL dari response
+        // Priority: profilePictureUrl (new) > profileUrl (old)
+        if (profile.profileUrl) {
+          this.profilePictureUrl = profile.profileUrl;
+          console.log('Profile picture URL set to:', this.profilePictureUrl);
+        } else if (profile.profileUrl) {
+          this.profilePictureUrl = profile.profileUrl;
+          console.log('Profile picture URL (legacy) set to:', this.profilePictureUrl);
+        } else {
+          console.log('No profile picture URL in response');
+          this.profilePictureUrl = null;
+        }
+
         this.loading = false;
       },
       error: (error: any) => {
         console.error('Error loading user profile:', error);
-
-        // Jika error, buat userDetail minimal dari username
-        this.userDetail = {
-          userId: 0,
-          nama: username,
-          telp: '',
-          bio: '',
-          alamat: '',
-          instansi: '',
-          alamatInstansi: '',
-          profileUrl: '',
-          fileUrl: null,
-          username: username
-        };
-
-        if (error.status === 404) {
-          this.alertService.info(`Profile for "${username}" not found, showing basic info`);
-        } else {
-          this.alertService.error(error.error?.message || 'Failed to load user profile');
-        }
+        // ... error handling
         this.loading = false;
       }
     });
@@ -240,6 +250,153 @@ export class DetailUsersComponent implements OnInit {
         this.loadingLogbooks = false;
       }
     });
+  }
+
+  // PERBAIKI: Method untuk mendapatkan profile image
+  getProfileImage(): string {
+    // Priority: profilePictureUrl, userDetail.profileUrl, atau empty
+    if (this.profilePictureUrl) {
+      return this.profilePictureUrl;
+    }
+    if (this.userDetail?.profileUrl) {
+      return this.userDetail.profileUrl;
+    }
+    return '';
+  }
+
+  downloadFile(fileUrl: string, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!fileUrl || fileUrl === '-' || fileUrl === 'null' || fileUrl === 'undefined' || fileUrl === '') {
+      this.alertService.warning('No file available to download');
+      return;
+    }
+
+    console.log('Downloading file from MinIO:', fileUrl);
+    this.isDownloading = true;
+
+    // Extract filename from path
+    // let fileName = fileUrl;
+    // if (fileUrl.includes('/')) {
+    //   fileName = fileUrl.split('/').pop() || fileUrl;
+    // }
+    // if (fileUrl.includes('\\')) {
+    //   fileName = fileUrl.split('\\').pop() || fileUrl;
+    // }
+
+    // Download dari MinIO melalui backend
+    this.downloadFromMinIO(fileUrl);
+  }
+
+  /**
+   * Download file from MinIO using backend API
+   */
+  downloadFromMinIO(fileName: string): void {
+    console.log('Downloading from MinIO:', fileName);
+
+    this.relationService.downloadFile(fileName).subscribe({
+      next: (blob: Blob) => {
+        console.log('File downloaded successfully from MinIO:', fileName);
+        console.log('File size:', blob.size, 'bytes');
+        console.log('File type:', blob.type);
+
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Cleanup
+        setTimeout(() => {
+          window.URL.revokeObjectURL(url);
+        }, 1000);
+
+        this.isDownloading = false;
+        this.alertService.success('File downloaded successfully!');
+      },
+      error: (error: any) => {
+        console.error('Download error from MinIO:', error);
+        this.isDownloading = false;
+
+        let errorMessage = 'Failed to download file. Please try again.';
+        if (error.status === 404) {
+          errorMessage = 'File not found in storage';
+        } else if (error.status === 403) {
+          errorMessage = 'You do not have permission to download this file';
+        } else if (error.status === 500) {
+          errorMessage = 'Server error. Please contact administrator.';
+        }
+        this.alertService.error(errorMessage);
+      }
+    });
+  }
+
+  /**
+   * Preview file URL (open in new tab)
+   */
+  previewFile(fileUrl: string, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!fileUrl || fileUrl === '-' || fileUrl === 'null' || fileUrl === 'undefined' || fileUrl === '') {
+      this.alertService.warning('No file available to preview');
+      return;
+    }
+
+    // Extract filename
+    let fileName = fileUrl;
+    if (fileUrl.includes('/')) {
+      fileName = fileUrl.split('/').pop() || fileUrl;
+    }
+    if (fileUrl.includes('\\')) {
+      fileName = fileUrl.split('\\').pop() || fileUrl;
+    }
+
+    // Open in new tab via backend
+    const url = `http://localhost:5000/api/UserDetail/download-file/${encodeURIComponent(fileName)}`;
+    window.open(url, '_blank');
+  }
+
+  /**
+   * Get file name from path
+   */
+  getFileName(fileUrl: string): string {
+    if (!fileUrl) return 'File';
+    let fileName = fileUrl;
+    if (fileUrl.includes('/')) {
+      fileName = fileUrl.split('/').pop() || fileUrl;
+    }
+    if (fileUrl.includes('\\')) {
+      fileName = fileUrl.split('\\').pop() || fileUrl;
+    }
+    return fileName;
+  }
+
+  /**
+   * Get file icon based on extension
+   */
+  getFileIcon(fileUrl: string): string {
+    if (!fileUrl) return '📄';
+    const fileName = this.getFileName(fileUrl).toLowerCase();
+    if (fileName.endsWith('.pdf')) return '📕';
+    if (fileName.endsWith('.doc') || fileName.endsWith('.docx')) return '📘';
+    if (fileName.endsWith('.xls') || fileName.endsWith('.xlsx')) return '📊';
+    if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg') || fileName.endsWith('.png')) return '🖼️';
+    if (fileName.endsWith('.zip') || fileName.endsWith('.rar')) return '📦';
+    return '📄';
+  }
+
+  // PERBAIKI: Handle image error
+  handleImageError(event: Event): void {
+    console.log('Image failed to load, showing placeholder');
+    this.profilePictureUrl = null;
+    if (this.userDetail) {
+      this.userDetail.profileUrl = '';
+    }
   }
 
   // ============= HELPER METHODS =============
@@ -388,6 +545,7 @@ export class DetailUsersComponent implements OnInit {
       }
     });
   }
+
   getRoleBadgeClass(role: string): string {
     const classes: { [key: string]: string } = {
       'Supervisor': 'bg-purple-100 text-purple-800',

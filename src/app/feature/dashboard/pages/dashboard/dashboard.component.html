@@ -79,7 +79,7 @@
       </div>
 
       <div *ngIf="loading" class="py-8 text-center">
-        <div class="inline-block w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <div class="inline-block w-8 h-8 border-2 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
         <p class="mt-2 text-sm text-gray-500">Loading...</p>
       </div>
 
@@ -102,7 +102,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let logbook of recentLogbooks" class="border-b hover:bg-gray-50">
-              <td class="px-4 py-3 font-medium text-gray-900 truncate max-w-xs">
+              <td class="max-w-xs px-4 py-3 font-medium text-gray-900 truncate">
                 {{ logbook.content }}
               </td>
               <td class="px-4 py-3">
@@ -133,8 +133,14 @@
       <h3 class="mb-4 text-lg font-semibold text-gray-900">Profile</h3>
 
       <div class="flex items-center space-x-4">
-        <div class="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-white text-2xl font-bold">
-          {{ user?.username?.charAt(0)?.toUpperCase() || 'U' }}
+        <div class="flex items-center justify-center w-16 h-16 text-2xl font-bold text-white bg-blue-500 rounded-full">
+
+          <div *ngIf="!getProfileImage()">{{ user?.username?.charAt(0)?.toUpperCase() || 'U' }}</div>
+          <img
+            *ngIf="getProfileImage()"
+            [src]="getProfileImage()"
+            alt="Profile Image"
+            class="object-cover w-full h-full border-2 rounded-full">
         </div>
         <div>
           <p class="text-lg font-medium text-gray-900">{{ user?.username || 'User' }}</p>
@@ -145,7 +151,7 @@
         </div>
       </div>
 
-      <div class="mt-4 pt-4 border-t border-gray-200">
+      <div class="pt-4 mt-4 border-t border-gray-200">
         <div class="grid grid-cols-2 gap-2 text-sm">
           <div>
             <span class="text-gray-500">Logbooks</span>
@@ -173,26 +179,26 @@
 
       <div class="grid grid-cols-2 gap-3">
         <a routerLink="/logbook"
-           class="p-4 text-center border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-          <div class="text-2xl mb-1">📋</div>
+           class="p-4 text-center transition-colors border border-gray-200 rounded-lg hover:bg-gray-50">
+          <div class="mb-1 text-2xl">📋</div>
           <p class="text-sm font-medium text-gray-700">View Logbooks</p>
         </a>
 
         <a routerLink="/logbook"
-           class="p-4 text-center border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-          <div class="text-2xl mb-1">➕</div>
+           class="p-4 text-center transition-colors border border-gray-200 rounded-lg hover:bg-gray-50">
+          <div class="mb-1 text-2xl">➕</div>
           <p class="text-sm font-medium text-gray-700">New Logbook</p>
         </a>
 
         <a routerLink="/monev"
-           class="p-4 text-center border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-          <div class="text-2xl mb-1">📊</div>
+           class="p-4 text-center transition-colors border border-gray-200 rounded-lg hover:bg-gray-50">
+          <div class="mb-1 text-2xl">📊</div>
           <p class="text-sm font-medium text-gray-700">View Monev</p>
         </a>
 
         <a routerLink="/profile"
-           class="p-4 text-center border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-          <div class="text-2xl mb-1">👤</div>
+           class="p-4 text-center transition-colors border border-gray-200 rounded-lg hover:bg-gray-50">
+          <div class="mb-1 text-2xl">👤</div>
           <p class="text-sm font-medium text-gray-700">My Profile</p>
         </a>
       </div>

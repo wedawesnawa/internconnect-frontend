@@ -18,7 +18,14 @@
             class="flex text-sm transition-all bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 hover:ring-2 hover:ring-blue-400">
             <span class="sr-only">Open user menu</span>
             <div class="flex items-center justify-center w-8 h-8 text-sm font-semibold text-white bg-blue-500 rounded-full">
-              {{ userInitial }}
+              <div *ngIf="!getProfileImage()">{{ userInitial }}</div>
+              <img
+                *ngIf="getProfileImage()"
+                [src]="getProfileImage()"
+                [alt]="userUsername"
+                class="rounded-full "
+                (error)="profilePictureUrl = null"
+              />
             </div>
           </button>
 

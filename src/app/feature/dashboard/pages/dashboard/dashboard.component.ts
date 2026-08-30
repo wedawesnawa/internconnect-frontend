@@ -6,6 +6,8 @@ import { User } from '../../../auth/models/auth.model';
 import { LogbookService } from '../../../logbook/services/logbook.service';
 import { MonevService } from '../../../monev/services/monev.service';
 import { AlertService } from '../../../../shared/services/alert.service';
+import { Profile } from '../../../profile/models/profile.model';
+import { ProfileService } from '../../../profile/services/profile.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,12 +18,15 @@ import { AlertService } from '../../../../shared/services/alert.service';
 })
 export class DashboardComponent implements OnInit {
   user: User | null = null;
+  profile: Profile | null = null;
 
   // Statistics
   totalLogbooks: number = 0;
   totalActivities: number = 0;
   totalMonev: number = 0;
   totalShared: number = 0;
+  previewUrl: string | null = null;
+  profileImageUrl: string | null = null;
 
   // Recent data
   recentLogbooks: any[] = [];
@@ -39,7 +44,8 @@ export class DashboardComponent implements OnInit {
     private authService: AuthService,
     private logbookService: LogbookService,
     private monevService: MonevService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private profileService: ProfileService,
   ) {}
 
   ngOnInit(): void {
@@ -49,6 +55,7 @@ export class DashboardComponent implements OnInit {
     if (this.user) {
       this.loadDashboardData();
     }
+    this.loadProfilePictureUrl();
   }
 
   loadDashboardData(): void {
@@ -69,6 +76,32 @@ export class DashboardComponent implements OnInit {
         this.loadMonevData();
       }
     });
+  }
+
+  loadProfilePictureUrl(): void {
+    this.profileService.getProfilePictureUrl().subscribe({
+      next: (response) => {
+        console.log('Profile picture URL:', response);
+        this.profileImageUrl = response.profileUrl;
+        if (this.profile) {
+          this.profile.profileUrl = response.profileUrl;
+        }
+      },
+      error: (error: any) => {
+        // 404 berarti belum ada foto profil, tidak perlu error
+        if (error.status !== 404) {
+          console.error('Error loading profile picture:', error);
+        }
+      }
+    });
+  }
+
+  getProfileImage(): string {
+    // Priority: preview (saat upload), profileImageUrl (dari MinIO), atau default
+    if (this.previewUrl) return this.previewUrl;
+    if (this.profileImageUrl) return this.profileImageUrl;
+    if (this.profile?.profileUrl) return this.profile.profileUrl;
+    return ''; // Akan ditampilkan placeholder
   }
 
   loadMonevData(): void {

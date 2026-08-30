@@ -115,6 +115,16 @@ export class ListUserComponent implements OnInit {
     console.log('Display name:', username);
     return username;
   }
+  // getDisplayName(item: RelationItem): string {
+  //   if (this.activeTab === 'received') {
+  //     return item.sharedBy || 'Unknown';
+  //   } else {
+  //     // Untuk given, sharedBy seharusnya adalah penerima
+  //     // Tapi jika tidak ada, gunakan sharedBy atau fallback
+  //     return item.sharedBy || 'Unknown';
+  //   }
+  // }
+
 
   /**
    * Mendapatkan label untuk interaksi

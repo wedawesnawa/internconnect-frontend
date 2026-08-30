@@ -5,6 +5,7 @@ import { ProfileService } from '../../services/profile.service';
 import { Profile, UpdateProfileRequest } from '../../models/profile.model';
 import { AlertService } from '../../../../shared/services/alert.service';
 import { AuthService } from '../../../auth/services/auth.service';
+import { User } from '../../../../feature/auth/models/auth.model';
 import { ProfileCheckService } from '../../services/profile-check.service';
 
 @Component({
@@ -19,8 +20,12 @@ export class ProfileComponent implements OnInit {
   isEditing: boolean = false;
   loading: boolean = false;
   isSaving: boolean = false;
+  isUploading: boolean = false;
   selectedFile: File | null = null;
   previewUrl: string | null = null;
+  profileImageUrl: string | null = null;
+  user: User | null = null;
+  userInitial: string = 'U';
 
   // Form data untuk edit
   editData: UpdateProfileRequest = {
@@ -40,6 +45,7 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.user = this.authService.getCurrentUser();
     this.loadProfile();
   }
 
@@ -50,6 +56,9 @@ export class ProfileComponent implements OnInit {
         console.log('Profile loaded:', data);
         this.profile = data;
         this.loading = false;
+
+        // Load profile picture URL
+        this.loadProfilePictureUrl();
       },
       error: (error: any) => {
         console.error('Error loading profile:', error);
@@ -60,6 +69,24 @@ export class ProfileComponent implements OnInit {
           this.alertService.error(error.error?.message || 'Failed to load profile');
         }
         this.loading = false;
+      }
+    });
+  }
+
+  loadProfilePictureUrl(): void {
+    this.profileService.getProfilePictureUrl().subscribe({
+      next: (response) => {
+        console.log('Profile picture URL:', response);
+        this.profileImageUrl = response.profileUrl;
+        if (this.profile) {
+          this.profile.profileUrl = response.profileUrl;
+        }
+      },
+      error: (error: any) => {
+        // 404 berarti belum ada foto profil, tidak perlu error
+        if (error.status !== 404) {
+          console.error('Error loading profile picture:', error);
+        }
       }
     });
   }
@@ -118,7 +145,24 @@ export class ProfileComponent implements OnInit {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
+      const file = input.files[0];
+
+      // Validasi file
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        this.alertService.error('Format file tidak didukung. Gunakan: JPG, JPEG, PNG, GIF, atau WEBP');
+        input.value = '';
+        return;
+      }
+
+      // Validasi ukuran (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        this.alertService.error('Ukuran file maksimal 5MB');
+        input.value = '';
+        return;
+      }
+
+      this.selectedFile = file;
 
       // Create preview
       const reader = new FileReader();
@@ -129,25 +173,32 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  uploadProfilePicture(): void {
+  updateProfilePicture(): void {
     if (!this.selectedFile) return;
 
-    this.isSaving = true;
-    this.profileService.uploadProfilePicture(this.selectedFile).subscribe({
+    this.isUploading = true;
+    this.profileService.updateProfilePicture(this.selectedFile).subscribe({
       next: (response) => {
-        console.log('Profile picture uploaded:', response);
+        console.log('Profile picture updated:', response);
+
+        // Update profile with new image URL
+        this.profileImageUrl = response.profileUrl;
         if (this.profile) {
           this.profile.profileUrl = response.profileUrl;
         }
-        this.alertService.success('Profile picture updated!');
+
+        this.alertService.success(response.message || 'Profile picture updated!');
         this.selectedFile = null;
         this.previewUrl = null;
-        this.isSaving = false;
+        this.isUploading = false;
+
+        // Refresh profile picture URL
+        this.loadProfilePictureUrl();
       },
       error: (error: any) => {
-        console.error('Error uploading profile picture:', error);
-        this.alertService.error(error.error?.message || 'Failed to upload profile picture');
-        this.isSaving = false;
+        console.error('Error updating profile picture:', error);
+        this.alertService.error(error.error?.message || 'Failed to update profile picture');
+        this.isUploading = false;
       }
     });
   }
@@ -164,7 +215,7 @@ export class ProfileComponent implements OnInit {
     });
 
     if (!hasChanges && !this.selectedFile) {
-      this.alertService.warning('No changes to save');
+      this.alertService.warning('Tidak ada perubahan yang disimpan');
       this.isSaving = false;
       return;
     }
@@ -178,9 +229,9 @@ export class ProfileComponent implements OnInit {
         this.isSaving = false;
         this.alertService.success('Profile updated successfully!');
 
-        // Upload profile picture jika ada
+        // Update profile picture jika ada
         if (this.selectedFile) {
-          this.uploadProfilePicture();
+          this.updateProfilePicture();
         }
         this.profileCheckService.resetAlertHistory();
       },
@@ -192,19 +243,28 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  // Method untuk upload profile picture saja (tanpa update profile)
+  uploadPictureOnly(): void {
+    if (!this.selectedFile) {
+      this.alertService.warning('Pilih file terlebih dahulu');
+      return;
+    }
+    this.updateProfilePicture();
+  }
+
   getInitials(): string {
-    if (!this.profile?.username) return 'U';
-    const names = this.profile.username.split(' ');
+    if (!this.user?.username) return 'U';
+    const names = this.user.username.split(' ');
     if (names.length === 1) return names[0].charAt(0).toUpperCase();
     return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
   }
 
   getProfileImage(): string {
+    // Priority: preview (saat upload), profileImageUrl (dari MinIO), atau default
     if (this.previewUrl) return this.previewUrl;
-    if (this.profile?.profileUrl) {
-      return `http://localhost:5000/${this.profile.profileUrl}`;
-    }
-    return '';
+    if (this.profileImageUrl) return this.profileImageUrl;
+    if (this.profile?.profileUrl) return this.profile.profileUrl;
+    return ''; // Akan ditampilkan placeholder
   }
 
   formatDate(date: string): string {

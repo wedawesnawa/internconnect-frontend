@@ -35,4 +35,27 @@ export class UserService {
     console.log('=== GET RELATIONS ===');
     return this.apiService.get<RelationResponse>('Dosen/relation', undefined, { withCredentials: true });
   }
+
+  downloadFile(fileName: string): Observable<Blob> {
+    console.log('=== DOWNLOAD FILE FROM MINIO ===');
+    console.log('File name:', fileName);
+    console.log('Endpoint:', `UserDetail/download-file/${fileName}`);
+
+    return this.apiService.getBlob(
+      `UserDetail/download-file?filePath=${fileName}`,
+      { withCredentials: true }
+    );
+  }
+
+  getFileUrl(fileName: string): Observable<{ url: string }> {
+    console.log('=== GET FILE URL FROM MINIO ===');
+    console.log('File name:', fileName);
+    console.log('Endpoint:', `UserDetail/file-url/${fileName}`);
+
+    return this.apiService.get<{ url: string }>(
+      `UserDetail/file-url?filePath=${fileName}`,
+      undefined,
+      { withCredentials: true }
+    );
+  }
 }

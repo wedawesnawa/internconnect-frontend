@@ -54,16 +54,27 @@ export class ProfileService {
    * Upload profile picture
    * POST /UserDetail/upload-profile-picture
    */
-  uploadProfilePicture(file: File): Observable<{ profileUrl: string }> {
+  updateProfilePicture(file: File): Observable<{ profileUrl: string; message: string; path: string }> {
     const formData = new FormData();
     formData.append('file', file, file.name);
 
-    console.log('=== UPLOAD PROFILE PICTURE ===');
+    console.log('=== UPDATE PROFILE PICTURE ===');
     console.log('File:', file.name);
+    console.log('File size:', file.size, 'bytes');
+    console.log('File type:', file.type);
 
-    return this.apiService.postFormData<{ profileUrl: string }>(
+    // UBAH: dari POST ke PUT
+    return this.apiService.putFormData<{ profileUrl: string; message: string; path: string }>(
       'UserDetail/upload-profile-picture',
       formData,
+      { withCredentials: true }
+    );
+  }
+  getProfilePictureUrl(): Observable<{ profileUrl: string }> {
+    console.log('=== GET PROFILE PICTURE URL ===');
+    return this.apiService.get<{ profileUrl: string }>(
+      'UserDetail/profile-picture-url',
+      undefined,
       { withCredentials: true }
     );
   }

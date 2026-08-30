@@ -30,6 +30,14 @@ export class ApiService {
       withCredentials: options?.withCredentials || false
     });
   }
+  getBlob(endpoint: string, options?: { withCredentials?: boolean }): Observable<Blob> {
+    const url = `${this.baseUrl}/${endpoint}`;
+    console.log('getBlob URL:', url);
+    return this.http.get(url, {
+      responseType: 'blob',
+      withCredentials: options?.withCredentials || false
+    });
+  }
 
   post<T>(endpoint: string, data: any, options?: { withCredentials?: boolean }): Observable<T> {
     return this.http.post<T>(`${this.baseUrl}/${endpoint}`, data, {
